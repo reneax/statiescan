@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.statiescan"
+    namespace = "nl.reneax.statiescan"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
