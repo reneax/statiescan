@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 class AppNavigationBar extends StatelessWidget {
   const AppNavigationBar({super.key});
 
-  static const List<({String location, NavigationDestination destination})>tabs = [
+  static const List<({String location, NavigationDestination destination})>
+  tabs = [
     (
       location: '/',
       destination: NavigationDestination(
