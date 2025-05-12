@@ -1,47 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class AppNavigationBar extends StatefulWidget {
+class AppNavigationBar extends StatelessWidget {
   const AppNavigationBar({super.key});
 
-  static final List<String> routes = ['/'];
+  static const List<({String location, NavigationDestination destination})>tabs = [
+    (
+      location: '/',
+      destination: NavigationDestination(
+        icon: Icon(Icons.receipt_long),
+        label: "Bonnen",
+      ),
+    ),
+    (
+      location: '/settings',
+      destination: NavigationDestination(
+        icon: Icon(Icons.settings),
+        label: "Instellingen",
+      ),
+    ),
+  ];
 
-  @override
-  State<AppNavigationBar> createState() => _AppNavigationBarState();
-}
-
-class _AppNavigationBarState extends State<AppNavigationBar> {
-  void _onItemTapped(BuildContext context, int index) {
-    final String location = GoRouterState.of(context).matchedLocation;
-
-    if (location == AppNavigationBar.routes[index]) {
-      return;
-    }
-
-    context.go(AppNavigationBar.routes[index]);
+  int _locationToTabIndex(String location) {
+    final index = tabs.indexWhere((tab) => tab.location == location);
+    return index >= 0 ? index : 0;
   }
 
-  int _getCurrentIndex(BuildContext context) {
-    final String location = GoRouterState.of(context).matchedLocation;
-    final int index = AppNavigationBar.routes.indexOf(location);
-
-    return index >= 0 ? index : 0;
+  void _navigateToIndex(
+    BuildContext context,
+    int index,
+    String currentLocation,
+  ) {
+    final destination = tabs[index].location;
+    if (destination != currentLocation) {
+      context.go(destination);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final String location = GoRouterState.of(context).matchedLocation;
+    final int currentIndex = _locationToTabIndex(location);
 
-    return BottomNavigationBar(
-      currentIndex: _getCurrentIndex(context),
-      backgroundColor: theme.colorScheme.onInverseSurface,
-      selectedItemColor: theme.colorScheme.primary,
-      unselectedItemColor: theme.colorScheme.onSurface,
-      onTap: (index) => _onItemTapped(context, index),
-      items: [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.question_mark), label: "Template"),
-      ],
+    return NavigationBar(
+      selectedIndex: currentIndex,
+      onDestinationSelected:
+          (index) => _navigateToIndex(context, index, location),
+      destinations: tabs.map((tab) => tab.destination).toList(),
     );
   }
 }
