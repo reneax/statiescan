@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 
-ThemeData appTheme(Brightness brightness) => ThemeData(
-  brightness: brightness,
-  colorScheme: ColorScheme.fromSeed(
+ThemeData appTheme(Brightness brightness) {
+  final colorScheme = ColorScheme.fromSeed(
     seedColor: Colors.blue,
     brightness: brightness,
-  ),
-  appBarTheme: AppBarTheme(
-    backgroundColor:
-    (brightness == Brightness.dark ? Color(0xFF1E1E1E) : Colors.blue),
-    foregroundColor: Colors.white,
-    elevation: 4,
-    titleTextStyle: const TextStyle(
-      color: Colors.white,
-      fontSize: 20,
-      fontWeight: FontWeight.w600,
-    ),
+  );
 
-  ),
-);
+  return ThemeData(
+    useMaterial3: true,
+    brightness: brightness,
+    colorScheme: colorScheme,
+    appBarTheme: AppBarTheme(
+      elevation: 4,
+      backgroundColor: colorScheme.surface,
+      foregroundColor: colorScheme.onSurface,
+      surfaceTintColor: colorScheme.surfaceTint,
+      iconTheme: IconThemeData(
+        color: colorScheme.onSurface,
+      ),
+    ),
+  );
+}
