@@ -228,6 +228,17 @@ class $VouchersTable extends Vouchers with TableInfo<$VouchersTable, Voucher> {
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _expiresAtMeta = const VerificationMeta(
+    'expiresAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> expiresAt = GeneratedColumn<DateTime>(
+    'expires_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _storeIdMeta = const VerificationMeta(
     'storeId',
   );
@@ -243,7 +254,13 @@ class $VouchersTable extends Vouchers with TableInfo<$VouchersTable, Voucher> {
     ),
   );
   @override
-  List<GeneratedColumn> get $columns => [id, code, createdAt, storeId];
+  List<GeneratedColumn> get $columns => [
+    id,
+    code,
+    createdAt,
+    expiresAt,
+    storeId,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -271,6 +288,12 @@ class $VouchersTable extends Vouchers with TableInfo<$VouchersTable, Voucher> {
       context.handle(
         _createdAtMeta,
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('expires_at')) {
+      context.handle(
+        _expiresAtMeta,
+        expiresAt.isAcceptableOrUnknown(data['expires_at']!, _expiresAtMeta),
       );
     }
     if (data.containsKey('store_id')) {
@@ -305,6 +328,10 @@ class $VouchersTable extends Vouchers with TableInfo<$VouchersTable, Voucher> {
             DriftSqlType.dateTime,
             data['${effectivePrefix}created_at'],
           )!,
+      expiresAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}expires_at'],
+      ),
       storeId:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
@@ -323,11 +350,13 @@ class Voucher extends DataClass implements Insertable<Voucher> {
   final int id;
   final String code;
   final DateTime createdAt;
+  final DateTime? expiresAt;
   final int storeId;
   const Voucher({
     required this.id,
     required this.code,
     required this.createdAt,
+    this.expiresAt,
     required this.storeId,
   });
   @override
@@ -336,6 +365,9 @@ class Voucher extends DataClass implements Insertable<Voucher> {
     map['id'] = Variable<int>(id);
     map['code'] = Variable<String>(code);
     map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || expiresAt != null) {
+      map['expires_at'] = Variable<DateTime>(expiresAt);
+    }
     map['store_id'] = Variable<int>(storeId);
     return map;
   }
@@ -345,6 +377,10 @@ class Voucher extends DataClass implements Insertable<Voucher> {
       id: Value(id),
       code: Value(code),
       createdAt: Value(createdAt),
+      expiresAt:
+          expiresAt == null && nullToAbsent
+              ? const Value.absent()
+              : Value(expiresAt),
       storeId: Value(storeId),
     );
   }
@@ -358,6 +394,7 @@ class Voucher extends DataClass implements Insertable<Voucher> {
       id: serializer.fromJson<int>(json['id']),
       code: serializer.fromJson<String>(json['code']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      expiresAt: serializer.fromJson<DateTime?>(json['expiresAt']),
       storeId: serializer.fromJson<int>(json['storeId']),
     );
   }
@@ -368,6 +405,7 @@ class Voucher extends DataClass implements Insertable<Voucher> {
       'id': serializer.toJson<int>(id),
       'code': serializer.toJson<String>(code),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'expiresAt': serializer.toJson<DateTime?>(expiresAt),
       'storeId': serializer.toJson<int>(storeId),
     };
   }
@@ -376,11 +414,13 @@ class Voucher extends DataClass implements Insertable<Voucher> {
     int? id,
     String? code,
     DateTime? createdAt,
+    Value<DateTime?> expiresAt = const Value.absent(),
     int? storeId,
   }) => Voucher(
     id: id ?? this.id,
     code: code ?? this.code,
     createdAt: createdAt ?? this.createdAt,
+    expiresAt: expiresAt.present ? expiresAt.value : this.expiresAt,
     storeId: storeId ?? this.storeId,
   );
   Voucher copyWithCompanion(VouchersCompanion data) {
@@ -388,6 +428,7 @@ class Voucher extends DataClass implements Insertable<Voucher> {
       id: data.id.present ? data.id.value : this.id,
       code: data.code.present ? data.code.value : this.code,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      expiresAt: data.expiresAt.present ? data.expiresAt.value : this.expiresAt,
       storeId: data.storeId.present ? data.storeId.value : this.storeId,
     );
   }
@@ -398,13 +439,14 @@ class Voucher extends DataClass implements Insertable<Voucher> {
           ..write('id: $id, ')
           ..write('code: $code, ')
           ..write('createdAt: $createdAt, ')
+          ..write('expiresAt: $expiresAt, ')
           ..write('storeId: $storeId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, code, createdAt, storeId);
+  int get hashCode => Object.hash(id, code, createdAt, expiresAt, storeId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -412,6 +454,7 @@ class Voucher extends DataClass implements Insertable<Voucher> {
           other.id == this.id &&
           other.code == this.code &&
           other.createdAt == this.createdAt &&
+          other.expiresAt == this.expiresAt &&
           other.storeId == this.storeId);
 }
 
@@ -419,17 +462,20 @@ class VouchersCompanion extends UpdateCompanion<Voucher> {
   final Value<int> id;
   final Value<String> code;
   final Value<DateTime> createdAt;
+  final Value<DateTime?> expiresAt;
   final Value<int> storeId;
   const VouchersCompanion({
     this.id = const Value.absent(),
     this.code = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.expiresAt = const Value.absent(),
     this.storeId = const Value.absent(),
   });
   VouchersCompanion.insert({
     this.id = const Value.absent(),
     required String code,
     this.createdAt = const Value.absent(),
+    this.expiresAt = const Value.absent(),
     required int storeId,
   }) : code = Value(code),
        storeId = Value(storeId);
@@ -437,12 +483,14 @@ class VouchersCompanion extends UpdateCompanion<Voucher> {
     Expression<int>? id,
     Expression<String>? code,
     Expression<DateTime>? createdAt,
+    Expression<DateTime>? expiresAt,
     Expression<int>? storeId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (code != null) 'code': code,
       if (createdAt != null) 'created_at': createdAt,
+      if (expiresAt != null) 'expires_at': expiresAt,
       if (storeId != null) 'store_id': storeId,
     });
   }
@@ -451,12 +499,14 @@ class VouchersCompanion extends UpdateCompanion<Voucher> {
     Value<int>? id,
     Value<String>? code,
     Value<DateTime>? createdAt,
+    Value<DateTime?>? expiresAt,
     Value<int>? storeId,
   }) {
     return VouchersCompanion(
       id: id ?? this.id,
       code: code ?? this.code,
       createdAt: createdAt ?? this.createdAt,
+      expiresAt: expiresAt ?? this.expiresAt,
       storeId: storeId ?? this.storeId,
     );
   }
@@ -473,6 +523,9 @@ class VouchersCompanion extends UpdateCompanion<Voucher> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (expiresAt.present) {
+      map['expires_at'] = Variable<DateTime>(expiresAt.value);
+    }
     if (storeId.present) {
       map['store_id'] = Variable<int>(storeId.value);
     }
@@ -485,6 +538,7 @@ class VouchersCompanion extends UpdateCompanion<Voucher> {
           ..write('id: $id, ')
           ..write('code: $code, ')
           ..write('createdAt: $createdAt, ')
+          ..write('expiresAt: $expiresAt, ')
           ..write('storeId: $storeId')
           ..write(')'))
         .toString();
@@ -734,6 +788,7 @@ typedef $$VouchersTableCreateCompanionBuilder =
       Value<int> id,
       required String code,
       Value<DateTime> createdAt,
+      Value<DateTime?> expiresAt,
       required int storeId,
     });
 typedef $$VouchersTableUpdateCompanionBuilder =
@@ -741,6 +796,7 @@ typedef $$VouchersTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> code,
       Value<DateTime> createdAt,
+      Value<DateTime?> expiresAt,
       Value<int> storeId,
     });
 
@@ -788,6 +844,11 @@ class $$VouchersTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get expiresAt => $composableBuilder(
+    column: $table.expiresAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -839,6 +900,11 @@ class $$VouchersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get expiresAt => $composableBuilder(
+    column: $table.expiresAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$StoresTableOrderingComposer get storeId {
     final $$StoresTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -880,6 +946,9 @@ class $$VouchersTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get expiresAt =>
+      $composableBuilder(column: $table.expiresAt, builder: (column) => column);
 
   $$StoresTableAnnotationComposer get storeId {
     final $$StoresTableAnnotationComposer composer = $composerBuilder(
@@ -936,11 +1005,13 @@ class $$VouchersTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> code = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> expiresAt = const Value.absent(),
                 Value<int> storeId = const Value.absent(),
               }) => VouchersCompanion(
                 id: id,
                 code: code,
                 createdAt: createdAt,
+                expiresAt: expiresAt,
                 storeId: storeId,
               ),
           createCompanionCallback:
@@ -948,11 +1019,13 @@ class $$VouchersTableTableManager
                 Value<int> id = const Value.absent(),
                 required String code,
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> expiresAt = const Value.absent(),
                 required int storeId,
               }) => VouchersCompanion.insert(
                 id: id,
                 code: code,
                 createdAt: createdAt,
+                expiresAt: expiresAt,
                 storeId: storeId,
               ),
           withReferenceMapper:

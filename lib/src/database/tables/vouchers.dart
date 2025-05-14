@@ -8,5 +8,7 @@ class Vouchers extends Table {
 
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
+  DateTimeColumn get expiresAt => dateTime().nullable()();
+
   IntColumn get storeId => integer().references(Stores, #id)();
 }
