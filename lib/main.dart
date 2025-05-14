@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:statiescan/src/app.dart';
-import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/utils/shared_prefs.dart';
 
 void main() async {
