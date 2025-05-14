@@ -23,9 +23,10 @@ class IntroDotIndicator extends StatelessWidget {
           height: isActive ? 12 : 8,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isActive
-                ? Theme.of(context).colorScheme.primary
-                : Colors.grey[400],
+            color:
+                isActive
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.grey[400],
           ),
         );
       }),

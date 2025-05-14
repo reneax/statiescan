@@ -9,10 +9,7 @@ class ImageBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 300,
-      child: Image.asset(
-        imagePath,
-        fit: BoxFit.contain,
-      ),
+      child: Image.asset(imagePath, fit: BoxFit.contain),
     );
   }
 }

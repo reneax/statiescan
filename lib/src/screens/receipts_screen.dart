@@ -9,7 +9,6 @@ class ReceiptsScreen extends StatefulWidget {
 }
 
 class _ReceiptsScreenState extends State<ReceiptsScreen> {
-
   @override
   void initState() {
     super.initState();

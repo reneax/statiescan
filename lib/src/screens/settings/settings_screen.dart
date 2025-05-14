@@ -8,7 +8,6 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return DefaultScreenScaffold(
       child: CustomScrollView(
         slivers: [

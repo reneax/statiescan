@@ -15,9 +15,7 @@ ThemeData appTheme(Brightness brightness) {
       backgroundColor: colorScheme.surface,
       foregroundColor: colorScheme.onSurface,
       surfaceTintColor: colorScheme.surfaceTint,
-      iconTheme: IconThemeData(
-        color: colorScheme.onSurface,
-      ),
+      iconTheme: IconThemeData(color: colorScheme.onSurface),
     ),
   );
 }
