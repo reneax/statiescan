@@ -7,7 +7,7 @@ class AppNavigationBar extends StatelessWidget {
   static const List<({String location, NavigationDestination destination})>
   tabs = [
     (
-      location: '/',
+      location: '/receipts',
       destination: NavigationDestination(
         icon: Icon(Icons.receipt_long),
         label: "Bonnen",

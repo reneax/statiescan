@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'intro_slide.dart';
+import 'package:statiescan/src/screens/intro/intro_data.dart';
+import 'package:statiescan/src/screens/intro/widgets/continue_button.dart';
+import 'package:statiescan/src/screens/intro/widgets/intro_card/intro_card.dart';
+import 'package:statiescan/src/screens/intro/widgets/intro_dot_indicator.dart';
 
 class IntroCarousel extends StatefulWidget {
   const IntroCarousel({super.key});
@@ -12,25 +15,6 @@ class _IntroCarouselState extends State<IntroCarousel> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
-  final List<Map<String, String>> _slides = [
-    {
-      'title': 'Scannen met app',
-      'description': 'Scan bonnetjes eenvoudig met je telefoon.'
-    },
-    {
-      'title': 'Bonnetjes terugvinden',
-      'description': 'Vind je opgeslagen bonnetjes snel terug.'
-    },
-    {
-      'title': 'Notificaties wanneer bonnetje verloopt',
-      'description': 'Krijg meldingen voordat je bon vervalt.'
-    },
-    {
-      'title': 'Delen met mensen',
-      'description': 'Deel je bonnen gemakkelijk met anderen.'
-    },
-  ];
-
   void _goToPage(int page) {
     _pageController.animateToPage(
       page,
@@ -40,13 +24,11 @@ class _IntroCarouselState extends State<IntroCarousel> {
   }
 
   void _goToPrevious() {
-    if (_currentIndex > 0) {
-      _goToPage(_currentIndex - 1);
-    }
+    if (_currentIndex > 0) _goToPage(_currentIndex - 1);
   }
 
   void _goToNext() {
-    if (_currentIndex < _slides.length - 1) {
+    if (_currentIndex < introSlidesData.length - 1) {
       _goToPage(_currentIndex + 1);
     }
   }
@@ -55,10 +37,11 @@ class _IntroCarouselState extends State<IntroCarousel> {
   Widget build(BuildContext context) {
     return SizedBox.expand(
       child: Column(
+        spacing: 20,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 300,
+            height: 450,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -69,12 +52,13 @@ class _IntroCarouselState extends State<IntroCarousel> {
                 Expanded(
                   child: PageView.builder(
                     controller: _pageController,
-                    itemCount: _slides.length,
+                    itemCount: introSlidesData.length,
                     itemBuilder: (context, index) {
-                      final slide = _slides[index];
-                      return IntroSlide(
-                        title: slide['title']!,
-                        description: slide['description']!,
+                      final slide = introSlidesData[index];
+                      return IntroCard(
+                        title: slide['title'],
+                        description: slide['description'],
+                        image: slide['image'],
                       );
                     },
                     onPageChanged: (index) {
@@ -87,28 +71,19 @@ class _IntroCarouselState extends State<IntroCarousel> {
                 IconButton(
                   icon: const Icon(Icons.arrow_forward_ios),
                   onPressed:
-                  _currentIndex == _slides.length - 1 ? null : _goToNext,
+                      _currentIndex == introSlidesData.length - 1
+                          ? null
+                          : _goToNext,
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(_slides.length, (index) {
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                width: _currentIndex == index ? 12 : 8,
-                height: _currentIndex == index ? 12 : 8,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _currentIndex == index
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey[400],
-                ),
-              );
-            }),
+          IntroDotIndicator(
+            length: introSlidesData.length,
+            currentIndex: _currentIndex,
+          ),
+          ContinueButton(
+            shouldShow: _currentIndex == introSlidesData.length - 1,
           ),
         ],
       ),

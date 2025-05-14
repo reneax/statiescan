@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'intro_carousel.dart';
+import 'package:statiescan/src/screens/intro/widgets/intro_carousel.dart';
 
 class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});
@@ -7,7 +7,6 @@ class IntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Colors.white,
       body: IntroCarousel(),
     );
   }

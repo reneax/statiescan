@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/screens/settings/widgets/sections/scanner_section.dart';
+import 'package:statiescan/src/screens/settings/widgets/sections/about_section.dart';
 import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -6,9 +8,24 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return DefaultScreenScaffold(
-      appBar: AppBar(title: Text("Instellingen")),
-      child: Container(),
+      child: CustomScrollView(
+        slivers: [
+          const SliverAppBar(
+            title: Text("Instellingen"),
+            floating: true,
+            snap: true,
+            forceElevated: true,
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              ScannerSection(),
+              AboutSection(),
+            ]),
+          ),
+        ],
+      ),
     );
   }
 }
