@@ -70,6 +70,11 @@ flutter:
   assets:
     - assets/images/github-dark.svg
     - assets/images/github-white.svg
+    - assets/images/scan_receipt.png
+    - assets/images/find_receipt.png
+    - assets/images/bell_receipt.png
+    - assets/images/share_receipt.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

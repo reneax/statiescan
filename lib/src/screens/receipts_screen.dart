@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class ReceiptsScreen extends StatefulWidget {
+  const ReceiptsScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ReceiptsScreen> createState() => _ReceiptsScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ReceiptsScreenState extends State<ReceiptsScreen> {
 
   @override
   void initState() {

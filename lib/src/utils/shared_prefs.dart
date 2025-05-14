@@ -7,7 +7,8 @@ class SharedPrefs {
     _sharedPrefs = await SharedPreferences.getInstance();
   }
 
-  static bool? getBool(String key) => _sharedPrefs.getBool(key);
+  static bool getBool(String key, {bool defaultValue = false}) =>
+      _sharedPrefs.getBool(key) ?? defaultValue;
 
   static Future<bool> setBool(String key, bool value) =>
       _sharedPrefs.setBool(key, value);

@@ -189,11 +189,11 @@ class StoresCompanion extends UpdateCompanion<Store> {
   }
 }
 
-class $VouchersTable extends Vouchers with TableInfo<$VouchersTable, Voucher> {
+class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $VouchersTable(this.attachedDatabase, [this._alias]);
+  $ReceiptsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -265,10 +265,10 @@ class $VouchersTable extends Vouchers with TableInfo<$VouchersTable, Voucher> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'vouchers';
+  static const String $name = 'receipts';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Voucher> instance, {
+    Insertable<Receipt> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -310,9 +310,9 @@ class $VouchersTable extends Vouchers with TableInfo<$VouchersTable, Voucher> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Voucher map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Receipt map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Voucher(
+    return Receipt(
       id:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
@@ -341,18 +341,18 @@ class $VouchersTable extends Vouchers with TableInfo<$VouchersTable, Voucher> {
   }
 
   @override
-  $VouchersTable createAlias(String alias) {
-    return $VouchersTable(attachedDatabase, alias);
+  $ReceiptsTable createAlias(String alias) {
+    return $ReceiptsTable(attachedDatabase, alias);
   }
 }
 
-class Voucher extends DataClass implements Insertable<Voucher> {
+class Receipt extends DataClass implements Insertable<Receipt> {
   final int id;
   final String code;
   final DateTime createdAt;
   final DateTime? expiresAt;
   final int storeId;
-  const Voucher({
+  const Receipt({
     required this.id,
     required this.code,
     required this.createdAt,
@@ -372,8 +372,8 @@ class Voucher extends DataClass implements Insertable<Voucher> {
     return map;
   }
 
-  VouchersCompanion toCompanion(bool nullToAbsent) {
-    return VouchersCompanion(
+  ReceiptsCompanion toCompanion(bool nullToAbsent) {
+    return ReceiptsCompanion(
       id: Value(id),
       code: Value(code),
       createdAt: Value(createdAt),
@@ -385,12 +385,12 @@ class Voucher extends DataClass implements Insertable<Voucher> {
     );
   }
 
-  factory Voucher.fromJson(
+  factory Receipt.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Voucher(
+    return Receipt(
       id: serializer.fromJson<int>(json['id']),
       code: serializer.fromJson<String>(json['code']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -410,21 +410,21 @@ class Voucher extends DataClass implements Insertable<Voucher> {
     };
   }
 
-  Voucher copyWith({
+  Receipt copyWith({
     int? id,
     String? code,
     DateTime? createdAt,
     Value<DateTime?> expiresAt = const Value.absent(),
     int? storeId,
-  }) => Voucher(
+  }) => Receipt(
     id: id ?? this.id,
     code: code ?? this.code,
     createdAt: createdAt ?? this.createdAt,
     expiresAt: expiresAt.present ? expiresAt.value : this.expiresAt,
     storeId: storeId ?? this.storeId,
   );
-  Voucher copyWithCompanion(VouchersCompanion data) {
-    return Voucher(
+  Receipt copyWithCompanion(ReceiptsCompanion data) {
+    return Receipt(
       id: data.id.present ? data.id.value : this.id,
       code: data.code.present ? data.code.value : this.code,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -435,7 +435,7 @@ class Voucher extends DataClass implements Insertable<Voucher> {
 
   @override
   String toString() {
-    return (StringBuffer('Voucher(')
+    return (StringBuffer('Receipt(')
           ..write('id: $id, ')
           ..write('code: $code, ')
           ..write('createdAt: $createdAt, ')
@@ -450,7 +450,7 @@ class Voucher extends DataClass implements Insertable<Voucher> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Voucher &&
+      (other is Receipt &&
           other.id == this.id &&
           other.code == this.code &&
           other.createdAt == this.createdAt &&
@@ -458,20 +458,20 @@ class Voucher extends DataClass implements Insertable<Voucher> {
           other.storeId == this.storeId);
 }
 
-class VouchersCompanion extends UpdateCompanion<Voucher> {
+class ReceiptsCompanion extends UpdateCompanion<Receipt> {
   final Value<int> id;
   final Value<String> code;
   final Value<DateTime> createdAt;
   final Value<DateTime?> expiresAt;
   final Value<int> storeId;
-  const VouchersCompanion({
+  const ReceiptsCompanion({
     this.id = const Value.absent(),
     this.code = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.expiresAt = const Value.absent(),
     this.storeId = const Value.absent(),
   });
-  VouchersCompanion.insert({
+  ReceiptsCompanion.insert({
     this.id = const Value.absent(),
     required String code,
     this.createdAt = const Value.absent(),
@@ -479,7 +479,7 @@ class VouchersCompanion extends UpdateCompanion<Voucher> {
     required int storeId,
   }) : code = Value(code),
        storeId = Value(storeId);
-  static Insertable<Voucher> custom({
+  static Insertable<Receipt> custom({
     Expression<int>? id,
     Expression<String>? code,
     Expression<DateTime>? createdAt,
@@ -495,14 +495,14 @@ class VouchersCompanion extends UpdateCompanion<Voucher> {
     });
   }
 
-  VouchersCompanion copyWith({
+  ReceiptsCompanion copyWith({
     Value<int>? id,
     Value<String>? code,
     Value<DateTime>? createdAt,
     Value<DateTime?>? expiresAt,
     Value<int>? storeId,
   }) {
-    return VouchersCompanion(
+    return ReceiptsCompanion(
       id: id ?? this.id,
       code: code ?? this.code,
       createdAt: createdAt ?? this.createdAt,
@@ -534,7 +534,7 @@ class VouchersCompanion extends UpdateCompanion<Voucher> {
 
   @override
   String toString() {
-    return (StringBuffer('VouchersCompanion(')
+    return (StringBuffer('ReceiptsCompanion(')
           ..write('id: $id, ')
           ..write('code: $code, ')
           ..write('createdAt: $createdAt, ')
@@ -549,12 +549,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $StoresTable stores = $StoresTable(this);
-  late final $VouchersTable vouchers = $VouchersTable(this);
+  late final $ReceiptsTable receipts = $ReceiptsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [stores, vouchers];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [stores, receipts];
 }
 
 typedef $$StoresTableCreateCompanionBuilder =
@@ -566,20 +566,20 @@ final class $$StoresTableReferences
     extends BaseReferences<_$AppDatabase, $StoresTable, Store> {
   $$StoresTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$VouchersTable, List<Voucher>> _vouchersRefsTable(
+  static MultiTypedResultKey<$ReceiptsTable, List<Receipt>> _receiptsRefsTable(
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
-    db.vouchers,
-    aliasName: $_aliasNameGenerator(db.stores.id, db.vouchers.storeId),
+    db.receipts,
+    aliasName: $_aliasNameGenerator(db.stores.id, db.receipts.storeId),
   );
 
-  $$VouchersTableProcessedTableManager get vouchersRefs {
-    final manager = $$VouchersTableTableManager(
+  $$ReceiptsTableProcessedTableManager get receiptsRefs {
+    final manager = $$ReceiptsTableTableManager(
       $_db,
-      $_db.vouchers,
+      $_db.receipts,
     ).filter((f) => f.storeId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_vouchersRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_receiptsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -605,22 +605,22 @@ class $$StoresTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> vouchersRefs(
-    Expression<bool> Function($$VouchersTableFilterComposer f) f,
+  Expression<bool> receiptsRefs(
+    Expression<bool> Function($$ReceiptsTableFilterComposer f) f,
   ) {
-    final $$VouchersTableFilterComposer composer = $composerBuilder(
+    final $$ReceiptsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.vouchers,
+      referencedTable: $db.receipts,
       getReferencedColumn: (t) => t.storeId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$VouchersTableFilterComposer(
+          }) => $$ReceiptsTableFilterComposer(
             $db: $db,
-            $table: $db.vouchers,
+            $table: $db.receipts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -666,22 +666,22 @@ class $$StoresTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  Expression<T> vouchersRefs<T extends Object>(
-    Expression<T> Function($$VouchersTableAnnotationComposer a) f,
+  Expression<T> receiptsRefs<T extends Object>(
+    Expression<T> Function($$ReceiptsTableAnnotationComposer a) f,
   ) {
-    final $$VouchersTableAnnotationComposer composer = $composerBuilder(
+    final $$ReceiptsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.vouchers,
+      referencedTable: $db.receipts,
       getReferencedColumn: (t) => t.storeId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$VouchersTableAnnotationComposer(
+          }) => $$ReceiptsTableAnnotationComposer(
             $db: $db,
-            $table: $db.vouchers,
+            $table: $db.receipts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -705,7 +705,7 @@ class $$StoresTableTableManager
           $$StoresTableUpdateCompanionBuilder,
           (Store, $$StoresTableReferences),
           Store,
-          PrefetchHooks Function({bool vouchersRefs})
+          PrefetchHooks Function({bool receiptsRefs})
         > {
   $$StoresTableTableManager(_$AppDatabase db, $StoresTable table)
     : super(
@@ -736,25 +736,25 @@ class $$StoresTableTableManager
                         ),
                       )
                       .toList(),
-          prefetchHooksCallback: ({vouchersRefs = false}) {
+          prefetchHooksCallback: ({receiptsRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (vouchersRefs) db.vouchers],
+              explicitlyWatchedTables: [if (receiptsRefs) db.receipts],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (vouchersRefs)
-                    await $_getPrefetchedData<Store, $StoresTable, Voucher>(
+                  if (receiptsRefs)
+                    await $_getPrefetchedData<Store, $StoresTable, Receipt>(
                       currentTable: table,
                       referencedTable: $$StoresTableReferences
-                          ._vouchersRefsTable(db),
+                          ._receiptsRefsTable(db),
                       managerFromTypedResult:
                           (p0) =>
                               $$StoresTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).vouchersRefs,
+                              ).receiptsRefs,
                       referencedItemsForCurrentItem:
                           (item, referencedItems) => referencedItems.where(
                             (e) => e.storeId == item.id,
@@ -781,18 +781,18 @@ typedef $$StoresTableProcessedTableManager =
       $$StoresTableUpdateCompanionBuilder,
       (Store, $$StoresTableReferences),
       Store,
-      PrefetchHooks Function({bool vouchersRefs})
+      PrefetchHooks Function({bool receiptsRefs})
     >;
-typedef $$VouchersTableCreateCompanionBuilder =
-    VouchersCompanion Function({
+typedef $$ReceiptsTableCreateCompanionBuilder =
+    ReceiptsCompanion Function({
       Value<int> id,
       required String code,
       Value<DateTime> createdAt,
       Value<DateTime?> expiresAt,
       required int storeId,
     });
-typedef $$VouchersTableUpdateCompanionBuilder =
-    VouchersCompanion Function({
+typedef $$ReceiptsTableUpdateCompanionBuilder =
+    ReceiptsCompanion Function({
       Value<int> id,
       Value<String> code,
       Value<DateTime> createdAt,
@@ -800,12 +800,12 @@ typedef $$VouchersTableUpdateCompanionBuilder =
       Value<int> storeId,
     });
 
-final class $$VouchersTableReferences
-    extends BaseReferences<_$AppDatabase, $VouchersTable, Voucher> {
-  $$VouchersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$ReceiptsTableReferences
+    extends BaseReferences<_$AppDatabase, $ReceiptsTable, Receipt> {
+  $$ReceiptsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $StoresTable _storeIdTable(_$AppDatabase db) => db.stores.createAlias(
-    $_aliasNameGenerator(db.vouchers.storeId, db.stores.id),
+    $_aliasNameGenerator(db.receipts.storeId, db.stores.id),
   );
 
   $$StoresTableProcessedTableManager get storeId {
@@ -823,9 +823,9 @@ final class $$VouchersTableReferences
   }
 }
 
-class $$VouchersTableFilterComposer
-    extends Composer<_$AppDatabase, $VouchersTable> {
-  $$VouchersTableFilterComposer({
+class $$ReceiptsTableFilterComposer
+    extends Composer<_$AppDatabase, $ReceiptsTable> {
+  $$ReceiptsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -876,9 +876,9 @@ class $$VouchersTableFilterComposer
   }
 }
 
-class $$VouchersTableOrderingComposer
-    extends Composer<_$AppDatabase, $VouchersTable> {
-  $$VouchersTableOrderingComposer({
+class $$ReceiptsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ReceiptsTable> {
+  $$ReceiptsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -929,9 +929,9 @@ class $$VouchersTableOrderingComposer
   }
 }
 
-class $$VouchersTableAnnotationComposer
-    extends Composer<_$AppDatabase, $VouchersTable> {
-  $$VouchersTableAnnotationComposer({
+class $$ReceiptsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ReceiptsTable> {
+  $$ReceiptsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -974,32 +974,32 @@ class $$VouchersTableAnnotationComposer
   }
 }
 
-class $$VouchersTableTableManager
+class $$ReceiptsTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $VouchersTable,
-          Voucher,
-          $$VouchersTableFilterComposer,
-          $$VouchersTableOrderingComposer,
-          $$VouchersTableAnnotationComposer,
-          $$VouchersTableCreateCompanionBuilder,
-          $$VouchersTableUpdateCompanionBuilder,
-          (Voucher, $$VouchersTableReferences),
-          Voucher,
+          $ReceiptsTable,
+          Receipt,
+          $$ReceiptsTableFilterComposer,
+          $$ReceiptsTableOrderingComposer,
+          $$ReceiptsTableAnnotationComposer,
+          $$ReceiptsTableCreateCompanionBuilder,
+          $$ReceiptsTableUpdateCompanionBuilder,
+          (Receipt, $$ReceiptsTableReferences),
+          Receipt,
           PrefetchHooks Function({bool storeId})
         > {
-  $$VouchersTableTableManager(_$AppDatabase db, $VouchersTable table)
+  $$ReceiptsTableTableManager(_$AppDatabase db, $ReceiptsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer:
-              () => $$VouchersTableFilterComposer($db: db, $table: table),
+              () => $$ReceiptsTableFilterComposer($db: db, $table: table),
           createOrderingComposer:
-              () => $$VouchersTableOrderingComposer($db: db, $table: table),
+              () => $$ReceiptsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer:
-              () => $$VouchersTableAnnotationComposer($db: db, $table: table),
+              () => $$ReceiptsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -1007,7 +1007,7 @@ class $$VouchersTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> expiresAt = const Value.absent(),
                 Value<int> storeId = const Value.absent(),
-              }) => VouchersCompanion(
+              }) => ReceiptsCompanion(
                 id: id,
                 code: code,
                 createdAt: createdAt,
@@ -1021,7 +1021,7 @@ class $$VouchersTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> expiresAt = const Value.absent(),
                 required int storeId,
-              }) => VouchersCompanion.insert(
+              }) => ReceiptsCompanion.insert(
                 id: id,
                 code: code,
                 createdAt: createdAt,
@@ -1034,7 +1034,7 @@ class $$VouchersTableTableManager
                       .map(
                         (e) => (
                           e.readTable(table),
-                          $$VouchersTableReferences(db, table, e),
+                          $$ReceiptsTableReferences(db, table, e),
                         ),
                       )
                       .toList(),
@@ -1062,10 +1062,10 @@ class $$VouchersTableTableManager
                       state.withJoin(
                             currentTable: table,
                             currentColumn: table.storeId,
-                            referencedTable: $$VouchersTableReferences
+                            referencedTable: $$ReceiptsTableReferences
                                 ._storeIdTable(db),
                             referencedColumn:
-                                $$VouchersTableReferences._storeIdTable(db).id,
+                                $$ReceiptsTableReferences._storeIdTable(db).id,
                           )
                           as T;
                 }
@@ -1081,18 +1081,18 @@ class $$VouchersTableTableManager
       );
 }
 
-typedef $$VouchersTableProcessedTableManager =
+typedef $$ReceiptsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $VouchersTable,
-      Voucher,
-      $$VouchersTableFilterComposer,
-      $$VouchersTableOrderingComposer,
-      $$VouchersTableAnnotationComposer,
-      $$VouchersTableCreateCompanionBuilder,
-      $$VouchersTableUpdateCompanionBuilder,
-      (Voucher, $$VouchersTableReferences),
-      Voucher,
+      $ReceiptsTable,
+      Receipt,
+      $$ReceiptsTableFilterComposer,
+      $$ReceiptsTableOrderingComposer,
+      $$ReceiptsTableAnnotationComposer,
+      $$ReceiptsTableCreateCompanionBuilder,
+      $$ReceiptsTableUpdateCompanionBuilder,
+      (Receipt, $$ReceiptsTableReferences),
+      Receipt,
       PrefetchHooks Function({bool storeId})
     >;
 
@@ -1101,6 +1101,6 @@ class $AppDatabaseManager {
   $AppDatabaseManager(this._db);
   $$StoresTableTableManager get stores =>
       $$StoresTableTableManager(_db, _db.stores);
-  $$VouchersTableTableManager get vouchers =>
-      $$VouchersTableTableManager(_db, _db.vouchers);
+  $$ReceiptsTableTableManager get receipts =>
+      $$ReceiptsTableTableManager(_db, _db.receipts);
 }

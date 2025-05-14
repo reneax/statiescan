@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:statiescan/src/database/tables/stores.dart';
 
-class Vouchers extends Table {
+class Receipts extends Table {
   IntColumn get id => integer().autoIncrement()();
 
   TextColumn get code => text()();
