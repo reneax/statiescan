@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/screens/intro/widgets/intro_card/widgets/card_text.dart';
 import 'package:statiescan/src/screens/intro/widgets/intro_card/widgets/image_box.dart';
 
 class IntroCard extends StatelessWidget {
@@ -24,26 +25,7 @@ class IntroCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-              child: Column(
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    description,
-                    style: const TextStyle(fontSize: 16),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
+            CardText(title: title, description: description),
             ImageBox(imagePath: image),
           ],
         ),
