@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CardText extends StatelessWidget {
+class SlideText extends StatelessWidget {
   final String title;
   final String description;
 
-  const CardText({super.key, required this.title, required this.description});
+  const SlideText({super.key, required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {

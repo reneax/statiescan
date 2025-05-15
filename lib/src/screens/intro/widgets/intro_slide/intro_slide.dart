@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:statiescan/src/screens/intro/widgets/intro_slide/widgets/card_text.dart';
+import 'package:statiescan/src/screens/intro/widgets/intro_slide/widgets/slide_text.dart';
 import 'package:statiescan/src/screens/intro/widgets/intro_slide/widgets/image_box.dart';
 
 class IntroSlide extends StatelessWidget {
@@ -22,7 +22,7 @@ class IntroSlide extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ImageBox(imagePath: image),
-            CardText(title: title, description: description),
+            SlideText(title: title, description: description),
           ],
         ),
       ),
