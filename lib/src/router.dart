@@ -5,7 +5,7 @@ import 'package:statiescan/src/screens/intro/intro_screen.dart';
 import 'package:statiescan/src/utils/shared_prefs.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: !SharedPrefs.getBool("introShown") ? "/receipts" : "/intro",
+  initialLocation: SharedPrefs.getBool("introShown") ? "/receipts" : "/intro",
   routes: [
     GoRoute(
       path: '/receipts',
