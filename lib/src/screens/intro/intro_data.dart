@@ -10,7 +10,7 @@ final List<Map<String, dynamic>> introSlidesData = [
     'image': 'assets/images/find_receipt.png',
   },
   {
-    'title': 'Notificaties wanneer bonnetje verloopt',
+    'title': 'Bon vervalt melding',
     'description': 'Krijg meldingen voordat je bon vervalt.',
     'image': 'assets/images/bell_receipt.png',
   },
