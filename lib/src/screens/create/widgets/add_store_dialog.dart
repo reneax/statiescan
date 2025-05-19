@@ -9,15 +9,11 @@ class AddStoreDialog extends StatefulWidget {
 
 class _AddStoreDialogState extends State<AddStoreDialog> {
   final TextEditingController _controller = TextEditingController();
-  String? _errorText;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _onSave() {
-    final name = _controller.text.trim();
-    if (name.isEmpty) {
-      setState(() {
-        _errorText = 'Winkelnaam mag niet leeg zijn.';
-      });
-    } else {
+    if (_formKey.currentState!.validate()) {
+      final name = _controller.text.trim();
       Navigator.of(context).pop(name);
     }
   }
@@ -26,14 +22,20 @@ class _AddStoreDialogState extends State<AddStoreDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text("Nieuwe winkel toevoegen"),
-      content: TextField(
-        controller: _controller,
-        decoration: InputDecoration(
-          labelText: "Winkelnaam",
-          errorText: _errorText,
+      content: Form(
+        key: _formKey,
+        child: TextFormField(
+          controller: _controller,
+          decoration: const InputDecoration(labelText: "Winkelnaam"),
+          autofocus: true,
+          onFieldSubmitted: (_) => _onSave(),
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Winkelnaam mag niet leeg zijn.';
+            }
+            return null;
+          },
         ),
-        autofocus: true,
-        onSubmitted: (_) => _onSave(),
       ),
       actions: [
         TextButton(
