@@ -31,7 +31,7 @@ class _AddStoreDialogState extends State<AddStoreDialog> {
           onFieldSubmitted: (_) => _onSave(),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return 'Winkelnaam mag niet leeg zijn.';
+              return 'Voer een winkelnaam in';
             }
             return null;
           },
