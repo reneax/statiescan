@@ -6,6 +6,8 @@ class Receipts extends Table {
 
   TextColumn get code => text()();
 
+  IntColumn get amountInCents => integer()();
+
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
   DateTimeColumn get expiresAt => dateTime().nullable()();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/intro/intro_data.dart';
 import 'package:statiescan/src/screens/intro/widgets/intro_carousel/widgets/carousel_display.dart';
 import 'package:statiescan/src/screens/intro/widgets/intro_carousel/widgets/carousel_footer.dart';
@@ -36,7 +37,7 @@ class _IntroCarouselState extends State<IntroCarousel> {
     if (_hasNextPage()) {
       _goToPage(_currentIndex + 1);
     } else {
-      SharedPrefs.setBool("introShown", true);
+      AppSettings.isIntroShown.set(true);
       context.go("/receipts");
     }
   }
