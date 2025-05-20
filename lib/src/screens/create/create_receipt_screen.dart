@@ -155,20 +155,18 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     ExpiryTime? expiry;
 
     if (lastStoreId != null) {
-      store = await (_database.select(_database.stores)
-        ..where((tbl) => tbl.id.equals(lastStoreId)))
-          .getSingleOrNull();
+      store =
+          await (_database.select(_database.stores)
+            ..where((tbl) => tbl.id.equals(lastStoreId))).getSingleOrNull();
     }
 
     if (lastExpiryTimeId != null) {
-      expiry = ExpiryTime.values
-          .where((e) => e.id == lastExpiryTimeId)
-          .firstOrNull;
+      expiry =
+          ExpiryTime.values.where((e) => e.id == lastExpiryTimeId).firstOrNull;
     }
 
     return (store, expiry);
   }
-
 
   @override
   Widget build(BuildContext context) {
