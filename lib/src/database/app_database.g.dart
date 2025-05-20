@@ -216,6 +216,17 @@ class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _amountInCentsMeta = const VerificationMeta(
+    'amountInCents',
+  );
+  @override
+  late final GeneratedColumn<int> amountInCents = GeneratedColumn<int>(
+    'amount_in_cents',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -257,6 +268,7 @@ class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
   List<GeneratedColumn> get $columns => [
     id,
     code,
+    amountInCents,
     createdAt,
     expiresAt,
     storeId,
@@ -283,6 +295,17 @@ class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
       );
     } else if (isInserting) {
       context.missing(_codeMeta);
+    }
+    if (data.containsKey('amount_in_cents')) {
+      context.handle(
+        _amountInCentsMeta,
+        amountInCents.isAcceptableOrUnknown(
+          data['amount_in_cents']!,
+          _amountInCentsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_amountInCentsMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -323,6 +346,11 @@ class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
             DriftSqlType.string,
             data['${effectivePrefix}code'],
           )!,
+      amountInCents:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}amount_in_cents'],
+          )!,
       createdAt:
           attachedDatabase.typeMapping.read(
             DriftSqlType.dateTime,
@@ -349,12 +377,14 @@ class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
 class Receipt extends DataClass implements Insertable<Receipt> {
   final int id;
   final String code;
+  final int amountInCents;
   final DateTime createdAt;
   final DateTime? expiresAt;
   final int storeId;
   const Receipt({
     required this.id,
     required this.code,
+    required this.amountInCents,
     required this.createdAt,
     this.expiresAt,
     required this.storeId,
@@ -364,6 +394,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['code'] = Variable<String>(code);
+    map['amount_in_cents'] = Variable<int>(amountInCents);
     map['created_at'] = Variable<DateTime>(createdAt);
     if (!nullToAbsent || expiresAt != null) {
       map['expires_at'] = Variable<DateTime>(expiresAt);
@@ -376,6 +407,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
     return ReceiptsCompanion(
       id: Value(id),
       code: Value(code),
+      amountInCents: Value(amountInCents),
       createdAt: Value(createdAt),
       expiresAt:
           expiresAt == null && nullToAbsent
@@ -393,6 +425,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
     return Receipt(
       id: serializer.fromJson<int>(json['id']),
       code: serializer.fromJson<String>(json['code']),
+      amountInCents: serializer.fromJson<int>(json['amountInCents']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       expiresAt: serializer.fromJson<DateTime?>(json['expiresAt']),
       storeId: serializer.fromJson<int>(json['storeId']),
@@ -404,6 +437,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'code': serializer.toJson<String>(code),
+      'amountInCents': serializer.toJson<int>(amountInCents),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'expiresAt': serializer.toJson<DateTime?>(expiresAt),
       'storeId': serializer.toJson<int>(storeId),
@@ -413,12 +447,14 @@ class Receipt extends DataClass implements Insertable<Receipt> {
   Receipt copyWith({
     int? id,
     String? code,
+    int? amountInCents,
     DateTime? createdAt,
     Value<DateTime?> expiresAt = const Value.absent(),
     int? storeId,
   }) => Receipt(
     id: id ?? this.id,
     code: code ?? this.code,
+    amountInCents: amountInCents ?? this.amountInCents,
     createdAt: createdAt ?? this.createdAt,
     expiresAt: expiresAt.present ? expiresAt.value : this.expiresAt,
     storeId: storeId ?? this.storeId,
@@ -427,6 +463,10 @@ class Receipt extends DataClass implements Insertable<Receipt> {
     return Receipt(
       id: data.id.present ? data.id.value : this.id,
       code: data.code.present ? data.code.value : this.code,
+      amountInCents:
+          data.amountInCents.present
+              ? data.amountInCents.value
+              : this.amountInCents,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       expiresAt: data.expiresAt.present ? data.expiresAt.value : this.expiresAt,
       storeId: data.storeId.present ? data.storeId.value : this.storeId,
@@ -438,6 +478,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
     return (StringBuffer('Receipt(')
           ..write('id: $id, ')
           ..write('code: $code, ')
+          ..write('amountInCents: $amountInCents, ')
           ..write('createdAt: $createdAt, ')
           ..write('expiresAt: $expiresAt, ')
           ..write('storeId: $storeId')
@@ -446,13 +487,15 @@ class Receipt extends DataClass implements Insertable<Receipt> {
   }
 
   @override
-  int get hashCode => Object.hash(id, code, createdAt, expiresAt, storeId);
+  int get hashCode =>
+      Object.hash(id, code, amountInCents, createdAt, expiresAt, storeId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Receipt &&
           other.id == this.id &&
           other.code == this.code &&
+          other.amountInCents == this.amountInCents &&
           other.createdAt == this.createdAt &&
           other.expiresAt == this.expiresAt &&
           other.storeId == this.storeId);
@@ -461,12 +504,14 @@ class Receipt extends DataClass implements Insertable<Receipt> {
 class ReceiptsCompanion extends UpdateCompanion<Receipt> {
   final Value<int> id;
   final Value<String> code;
+  final Value<int> amountInCents;
   final Value<DateTime> createdAt;
   final Value<DateTime?> expiresAt;
   final Value<int> storeId;
   const ReceiptsCompanion({
     this.id = const Value.absent(),
     this.code = const Value.absent(),
+    this.amountInCents = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.expiresAt = const Value.absent(),
     this.storeId = const Value.absent(),
@@ -474,14 +519,17 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
   ReceiptsCompanion.insert({
     this.id = const Value.absent(),
     required String code,
+    required int amountInCents,
     this.createdAt = const Value.absent(),
     this.expiresAt = const Value.absent(),
     required int storeId,
   }) : code = Value(code),
+       amountInCents = Value(amountInCents),
        storeId = Value(storeId);
   static Insertable<Receipt> custom({
     Expression<int>? id,
     Expression<String>? code,
+    Expression<int>? amountInCents,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? expiresAt,
     Expression<int>? storeId,
@@ -489,6 +537,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (code != null) 'code': code,
+      if (amountInCents != null) 'amount_in_cents': amountInCents,
       if (createdAt != null) 'created_at': createdAt,
       if (expiresAt != null) 'expires_at': expiresAt,
       if (storeId != null) 'store_id': storeId,
@@ -498,6 +547,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
   ReceiptsCompanion copyWith({
     Value<int>? id,
     Value<String>? code,
+    Value<int>? amountInCents,
     Value<DateTime>? createdAt,
     Value<DateTime?>? expiresAt,
     Value<int>? storeId,
@@ -505,6 +555,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
     return ReceiptsCompanion(
       id: id ?? this.id,
       code: code ?? this.code,
+      amountInCents: amountInCents ?? this.amountInCents,
       createdAt: createdAt ?? this.createdAt,
       expiresAt: expiresAt ?? this.expiresAt,
       storeId: storeId ?? this.storeId,
@@ -519,6 +570,9 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
     }
     if (code.present) {
       map['code'] = Variable<String>(code.value);
+    }
+    if (amountInCents.present) {
+      map['amount_in_cents'] = Variable<int>(amountInCents.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -537,6 +591,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
     return (StringBuffer('ReceiptsCompanion(')
           ..write('id: $id, ')
           ..write('code: $code, ')
+          ..write('amountInCents: $amountInCents, ')
           ..write('createdAt: $createdAt, ')
           ..write('expiresAt: $expiresAt, ')
           ..write('storeId: $storeId')
@@ -787,6 +842,7 @@ typedef $$ReceiptsTableCreateCompanionBuilder =
     ReceiptsCompanion Function({
       Value<int> id,
       required String code,
+      required int amountInCents,
       Value<DateTime> createdAt,
       Value<DateTime?> expiresAt,
       required int storeId,
@@ -795,6 +851,7 @@ typedef $$ReceiptsTableUpdateCompanionBuilder =
     ReceiptsCompanion Function({
       Value<int> id,
       Value<String> code,
+      Value<int> amountInCents,
       Value<DateTime> createdAt,
       Value<DateTime?> expiresAt,
       Value<int> storeId,
@@ -839,6 +896,11 @@ class $$ReceiptsTableFilterComposer
 
   ColumnFilters<String> get code => $composableBuilder(
     column: $table.code,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountInCents => $composableBuilder(
+    column: $table.amountInCents,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -895,6 +957,11 @@ class $$ReceiptsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get amountInCents => $composableBuilder(
+    column: $table.amountInCents,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -943,6 +1010,11 @@ class $$ReceiptsTableAnnotationComposer
 
   GeneratedColumn<String> get code =>
       $composableBuilder(column: $table.code, builder: (column) => column);
+
+  GeneratedColumn<int> get amountInCents => $composableBuilder(
+    column: $table.amountInCents,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -1004,12 +1076,14 @@ class $$ReceiptsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> code = const Value.absent(),
+                Value<int> amountInCents = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> expiresAt = const Value.absent(),
                 Value<int> storeId = const Value.absent(),
               }) => ReceiptsCompanion(
                 id: id,
                 code: code,
+                amountInCents: amountInCents,
                 createdAt: createdAt,
                 expiresAt: expiresAt,
                 storeId: storeId,
@@ -1018,12 +1092,14 @@ class $$ReceiptsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String code,
+                required int amountInCents,
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> expiresAt = const Value.absent(),
                 required int storeId,
               }) => ReceiptsCompanion.insert(
                 id: id,
                 code: code,
+                amountInCents: amountInCents,
                 createdAt: createdAt,
                 expiresAt: expiresAt,
                 storeId: storeId,

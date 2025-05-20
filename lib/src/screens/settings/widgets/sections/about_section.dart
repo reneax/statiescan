@@ -20,7 +20,6 @@ class AboutSection extends StatelessWidget {
           leading: const Icon(Icons.star_rate),
           onTap: () => inAppReview.openStoreListing(),
         ),
-        const Divider(),
         ListTile(
           title: const Text("Github"),
           leading: const GithubIcon(),
