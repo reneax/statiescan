@@ -30,6 +30,7 @@ class CreateReceiptScreen extends StatefulWidget {
 class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   final _database = AppDatabase();
   final _formKey = GlobalKey<FormState>();
+  final FocusNode _amountFocusNode = FocusNode();
   final TextEditingController _amountController = TextEditingController();
   Store? _selectedStore;
   ExpiryTime? _selectedExpiryTime;
@@ -38,14 +39,16 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   @override
   void initState() {
     super.initState();
-
-    if (widget.amountInCents != null) {
-      _amountController.text = AmountFormatter.amountToString(
-        widget.amountInCents!,
-      );
-    }
-
+    _handleAmountField();
     _fetchStores();
+    _fetchLastOptions();
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _amountFocusNode.dispose();
+    super.dispose();
   }
 
   void _handleStoreChanged(Store? store) {
@@ -60,6 +63,18 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     });
   }
 
+  void _handleAmountField() {
+    if (widget.amountInCents != null) {
+      _amountController.text = AmountFormatter.amountToString(
+        widget.amountInCents!,
+      );
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _amountFocusNode.requestFocus();
+      });
+    }
+  }
+
   void _handleAddStore() async {
     final newStoreName = await showDialog<String>(
       context: context,
@@ -68,11 +83,13 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
 
     if (newStoreName == null || newStoreName.isEmpty) return;
 
-    await _database
+    int newStoreId = await _database
         .into(_database.stores)
         .insert(StoresCompanion.insert(name: newStoreName));
 
-    _fetchStores();
+    await _fetchStores();
+
+    _selectedStore = _stores.firstWhere((store) => store.id == newStoreId);
   }
 
   void _saveReceipt() async {
@@ -113,8 +130,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     }
   }
 
-  void _fetchStores() async {
-    List<Store> stores = await _database.select(_database.stores).get();
+  Future<void> _fetchLastOptions() async {
     int? lastStoreId = AppSettings.lastChosenStoreId.get();
     int? lastExpireTimeId = AppSettings.lastChosenExpiryTimeId.get();
     Store? lastStore;
@@ -136,16 +152,17 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     }
 
     setState(() {
-      _stores = stores;
       _selectedExpiryTime = lastExpiryTime;
       _selectedStore = lastStore;
     });
   }
 
-  @override
-  void dispose() {
-    _amountController.dispose();
-    super.dispose();
+  Future<void> _fetchStores() async {
+    List<Store> stores = await _database.select(_database.stores).get();
+
+    setState(() {
+      _stores = stores;
+    });
   }
 
   @override
@@ -153,40 +170,45 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     return DefaultScreenScaffold(
       appBar: AppBar(title: const Text("Bon toevoegen")),
       showNavigation: false,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            spacing: 20,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BarcodeDisplay(barcode: widget.barcode),
-              AmountInputField(editingController: _amountController),
-              ExpiryTimeDropdown(
-                selectedExpiryTime: _selectedExpiryTime,
-                onTimeChanged: _handleTimeChanged,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  StoreDropdown(
-                    selectedStore: _selectedStore,
-                    stores: _stores,
-                    onStoreChanged: _handleStoreChanged,
-                  ),
-                  TextButton(
-                    onPressed: _handleAddStore,
-                    child: Text("Nieuwe winkel toevoegen"),
-                  ),
-                ],
-              ),
-              FilledButton.icon(
-                icon: const Icon(Icons.save),
-                label: const Text("Bon opslaan"),
-                onPressed: _saveReceipt,
-              ),
-            ],
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              spacing: 20,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BarcodeDisplay(barcode: widget.barcode),
+                AmountInputField(
+                  editingController: _amountController,
+                  focusNode: _amountFocusNode,
+                ),
+                ExpiryTimeDropdown(
+                  selectedExpiryTime: _selectedExpiryTime,
+                  onTimeChanged: _handleTimeChanged,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    StoreDropdown(
+                      selectedStore: _selectedStore,
+                      stores: _stores,
+                      onStoreChanged: _handleStoreChanged,
+                    ),
+                    TextButton(
+                      onPressed: _handleAddStore,
+                      child: Text("Nieuwe winkel toevoegen"),
+                    ),
+                  ],
+                ),
+                FilledButton.icon(
+                  icon: const Icon(Icons.save),
+                  label: const Text("Bon opslaan"),
+                  onPressed: _saveReceipt,
+                ),
+              ],
+            ),
           ),
         ),
       ),
