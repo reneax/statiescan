@@ -4,7 +4,6 @@ import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/intro/intro_data.dart';
 import 'package:statiescan/src/screens/intro/widgets/intro_carousel/widgets/carousel_display.dart';
 import 'package:statiescan/src/screens/intro/widgets/intro_carousel/widgets/carousel_footer.dart';
-import 'package:statiescan/src/utils/shared_prefs.dart';
 
 class IntroCarousel extends StatefulWidget {
   const IntroCarousel({super.key});
