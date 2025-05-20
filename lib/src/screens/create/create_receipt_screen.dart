@@ -40,8 +40,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   void initState() {
     super.initState();
     _handleAmountField();
-    _fetchStores();
-    _fetchLastOptions();
+    _initializeState();
   }
 
   @override
@@ -75,6 +74,17 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     }
   }
 
+  Future<void> _initializeState() async {
+    final stores = await _loadStores();
+    final (store, expiry) = await _loadLastOptions();
+
+    setState(() {
+      _stores = stores;
+      _selectedStore = store;
+      _selectedExpiryTime = expiry;
+    });
+  }
+
   void _handleAddStore() async {
     final newStoreName = await showDialog<String>(
       context: context,
@@ -87,9 +97,12 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
         .into(_database.stores)
         .insert(StoresCompanion.insert(name: newStoreName));
 
-    await _fetchStores();
+    final stores = await _loadStores();
 
-    _selectedStore = _stores.firstWhere((store) => store.id == newStoreId);
+    setState(() {
+      _stores = stores;
+      _selectedStore = stores.firstWhere((s) => s.id == newStoreId);
+    });
   }
 
   void _saveReceipt() async {
@@ -122,7 +135,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     if (mounted) {
       SnackbarCreator.show(
         context,
-        message: "Bon is succesvol aangemaakt.",
+        message: "De bon is succesvol opgeslagen.",
         status: SnackbarStatus.success,
       );
 
@@ -130,40 +143,32 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     }
   }
 
-  Future<void> _fetchLastOptions() async {
+  Future<List<Store>> _loadStores() {
+    return _database.select(_database.stores).get();
+  }
+
+  Future<(Store?, ExpiryTime?)> _loadLastOptions() async {
     int? lastStoreId = AppSettings.lastChosenStoreId.get();
-    int? lastExpireTimeId = AppSettings.lastChosenExpiryTimeId.get();
-    Store? lastStore;
-    ExpiryTime? lastExpiryTime;
+    int? lastExpiryTimeId = AppSettings.lastChosenExpiryTimeId.get();
+
+    Store? store;
+    ExpiryTime? expiry;
 
     if (lastStoreId != null) {
-      final store =
-          await (_database.select(_database.stores)
-            ..where((tbl) => tbl.id.equals(lastStoreId))).getSingleOrNull();
-
-      lastStore = store;
+      store = await (_database.select(_database.stores)
+        ..where((tbl) => tbl.id.equals(lastStoreId)))
+          .getSingleOrNull();
     }
 
-    if (lastExpireTimeId != null) {
-      lastExpiryTime =
-          ExpiryTime.values
-              .where((expireTime) => expireTime.id == lastExpireTimeId)
-              .firstOrNull;
+    if (lastExpiryTimeId != null) {
+      expiry = ExpiryTime.values
+          .where((e) => e.id == lastExpiryTimeId)
+          .firstOrNull;
     }
 
-    setState(() {
-      _selectedExpiryTime = lastExpiryTime;
-      _selectedStore = lastStore;
-    });
+    return (store, expiry);
   }
 
-  Future<void> _fetchStores() async {
-    List<Store> stores = await _database.select(_database.stores).get();
-
-    setState(() {
-      _stores = stores;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
