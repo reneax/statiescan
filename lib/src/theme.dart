@@ -12,10 +12,6 @@ ThemeData appTheme(Brightness brightness) {
     colorScheme: colorScheme,
     appBarTheme: AppBarTheme(
       elevation: 4,
-      backgroundColor: colorScheme.surface,
-      foregroundColor: colorScheme.onSurface,
-      surfaceTintColor: colorScheme.surfaceTint,
-      iconTheme: IconThemeData(color: colorScheme.onSurface),
     ),
   );
 }
