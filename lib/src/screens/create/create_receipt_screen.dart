@@ -40,7 +40,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   void initState() {
     super.initState();
     _handleAmountField();
-    _initializeState();
+    _initializeSavedState();
   }
 
   @override
@@ -53,10 +53,12 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   void _handleStoreChanged(Store? store) {
     setState(() {
       _selectedStore = store;
-      _selectedExpiryTime =
-          ExpiryTime.values
-              .where((e) => e.id == _selectedStore!.lastExpiryTimeId)
-              .firstOrNull;
+      if (_selectedStore != null) {
+        _selectedExpiryTime =
+            ExpiryTime.values
+                .where((e) => e.id == _selectedStore!.lastExpiryTimeId)
+                .firstOrNull;
+      }
     });
   }
 
@@ -78,7 +80,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     }
   }
 
-  Future<void> _initializeState() async {
+  Future<void> _initializeSavedState() async {
     final stores = await _loadStores();
     final (store, expiryTime) = await _loadLastOptions(stores);
 
