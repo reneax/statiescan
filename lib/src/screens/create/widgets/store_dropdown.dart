@@ -4,36 +4,43 @@ import 'package:statiescan/src/database/app_database.dart';
 class StoreDropdown extends StatelessWidget {
   final List<Store> stores;
   final ValueChanged<Store?> onStoreChanged;
+  final VoidCallback onStoreAdd;
   final Store? selectedStore;
 
   const StoreDropdown({
     super.key,
     required this.stores,
     required this.onStoreChanged,
+    required this.onStoreAdd,
     required this.selectedStore,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      spacing: 8,
       children: [
-        DropdownButtonFormField<Store>(
-          items:
-              stores
-                  .map(
-                    (store) =>
-                        DropdownMenuItem(value: store, child: Text(store.name)),
-                  )
-                  .toList(),
-          onChanged: onStoreChanged,
-          value: selectedStore,
-          decoration: const InputDecoration(
-            labelText: "Winkel",
-            border: OutlineInputBorder(),
+        Expanded(
+          child: DropdownButtonFormField<Store>(
+            items:
+                stores
+                    .map(
+                      (store) => DropdownMenuItem(
+                        value: store,
+                        child: Text(store.name),
+                      ),
+                    )
+                    .toList(),
+            onChanged: onStoreChanged,
+            value: selectedStore,
+            decoration: const InputDecoration(
+              labelText: "Winkel",
+              border: OutlineInputBorder(),
+            ),
+            validator: (value) => value == null ? 'Selecteer een winkel' : null,
           ),
-          validator: (value) => value == null ? 'Selecteer een winkel' : null,
         ),
+        IconButton(icon: const Icon(Icons.add), onPressed: onStoreAdd),
       ],
     );
   }

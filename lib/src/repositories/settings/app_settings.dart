@@ -25,10 +25,4 @@ class AppSettings {
     type: SettingType.int,
     defaultValue: null,
   );
-
-  static const Setting<int?> lastChosenExpiryTimeId = Setting<int?>(
-    key: 'lastChosenExpiryTimeId',
-    type: SettingType.int,
-    defaultValue: null,
-  );
 }
