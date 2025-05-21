@@ -108,6 +108,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     setState(() {
       _stores = stores;
       _selectedStore = stores.firstWhere((s) => s.id == newStoreId);
+      _selectedExpiryTime = null;
     });
   }
 
