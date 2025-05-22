@@ -20,6 +20,7 @@ class StoreDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
       children: [
         Expanded(
@@ -44,7 +45,10 @@ class StoreDropdown extends StatelessWidget {
             validator: (value) => value == null ? 'Selecteer een winkel' : null,
           ),
         ),
-        IconButton(icon: const Icon(Icons.add), onPressed: onStoreAdd),
+        Padding(
+          padding: EdgeInsets.all(2),
+          child: IconButton(icon: const Icon(Icons.add), onPressed: onStoreAdd),
+        ),
       ],
     );
   }
