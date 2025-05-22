@@ -32,6 +32,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode _amountFocusNode = FocusNode();
   final TextEditingController _amountController = TextEditingController();
+  bool _isLoading = true;
   Store? _selectedStore;
   ExpiryTime? _selectedExpiryTime;
   List<Store> _stores = [];
@@ -39,6 +40,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   @override
   void initState() {
     super.initState();
+    _isLoading = true;
     _handleAmountField();
     _initializeSavedState();
   }
@@ -88,6 +90,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
       _stores = stores;
       _selectedStore = store;
       _selectedExpiryTime = expiryTime;
+      _isLoading = false;
     });
   }
 
@@ -200,6 +203,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
                   focusNode: _amountFocusNode,
                 ),
                 StoreDropdown(
+                  isLoading: _isLoading,
                   selectedStore: _selectedStore,
                   stores: _stores,
                   onStoreAdd: _handleAddStore,
