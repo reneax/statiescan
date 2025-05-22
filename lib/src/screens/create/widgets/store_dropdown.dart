@@ -46,8 +46,11 @@ class StoreDropdown extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.all(2),
-          child: IconButton(icon: const Icon(Icons.add), onPressed: onStoreAdd),
+          padding: EdgeInsets.all(5),
+          child: IconButton.filled(
+            icon: const Icon(Icons.add),
+            onPressed: onStoreAdd,
+          ),
         ),
       ],
     );
