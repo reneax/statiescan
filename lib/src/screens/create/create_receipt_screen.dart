@@ -138,10 +138,12 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
           ),
         );
 
-    await (_database.update(_database.stores)
-      ..where((tbl) => tbl.id.equals(_selectedStore!.id))).write(
-      StoresCompanion(lastExpiryTimeId: drift.Value(_selectedExpiryTime!.id)),
-    );
+    if (_selectedExpiryTime!.id != _selectedStore!.lastExpiryTimeId) {
+      await (_database.update(_database.stores)
+        ..where((tbl) => tbl.id.equals(_selectedStore!.id))).write(
+        StoresCompanion(lastExpiryTimeId: drift.Value(_selectedExpiryTime!.id)),
+      );
+    }
 
     if (mounted) {
       SnackbarCreator.show(
