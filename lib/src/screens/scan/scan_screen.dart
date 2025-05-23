@@ -17,7 +17,7 @@ class ScanScreen extends StatefulWidget {
 class _ScanScreenState extends State<ScanScreen> {
   bool _isProcessing = false;
 
-  void _onBarcodeDetect(BuildContext context, BarcodeCapture capture) async {
+  void _onBarcodeDetect(BarcodeCapture capture) async {
     Barcode barcode = capture.barcodes.first;
 
     if (barcode.rawValue == null) {
@@ -42,7 +42,7 @@ class _ScanScreenState extends State<ScanScreen> {
       Vibration.vibrate(duration: 100);
     }
 
-    if (!context.mounted) return;
+    if (!mounted) return;
 
     context.pushReplacement(
       '/create?barcode=${barcode.rawValue}&amount=$amountInCents',
@@ -62,7 +62,7 @@ class _ScanScreenState extends State<ScanScreen> {
               detectionSpeed: DetectionSpeed.noDuplicates,
               returnImage: AppSettings.automaticAmountDetection.get(),
             ),
-            onDetect: (capture) => _onBarcodeDetect(context, capture),
+            onDetect: (capture) => _onBarcodeDetect(capture),
           ),
           _isProcessing ? const ProcessingTextOverlay() : const ScanCrosshair(),
         ],

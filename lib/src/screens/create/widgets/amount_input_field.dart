@@ -21,6 +21,7 @@ class AmountInputField extends StatelessWidget {
     return TextFormField(
       controller: editingController,
       focusNode: focusNode,
+      onTapOutside: (event) => focusNode?.unfocus(),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'^\d*[,.]?\d{0,2}')),
