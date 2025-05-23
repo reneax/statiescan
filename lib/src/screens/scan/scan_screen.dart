@@ -34,7 +34,6 @@ class _ScanScreenState extends State<ScanScreen> {
       amountInCents =
           await AmountDetectorHelper(
             imageBytes: capture.image!,
-            imageSize: capture.size,
           ).find();
     }
 

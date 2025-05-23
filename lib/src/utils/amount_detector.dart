@@ -14,11 +14,9 @@ class AmountDetectorHelper {
   static final RegExp _formatLineRegex = RegExp(r'\s+');
 
   final Uint8List imageBytes;
-  final Size imageSize;
 
   const AmountDetectorHelper({
     required this.imageBytes,
-    required this.imageSize,
   });
 
   Future<InputImage> _createInputImageFromBytes() async {
