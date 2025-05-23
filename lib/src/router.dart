@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/create/create_receipt_screen.dart';
 import 'package:statiescan/src/screens/intro/intro_screen.dart';
-import 'package:statiescan/src/screens/receipts_screen.dart';
+import 'package:statiescan/src/screens/receipts/receipts_screen.dart';
 import 'package:statiescan/src/screens/scan/scan_screen.dart';
 import 'package:statiescan/src/screens/settings/settings_screen.dart';
 
