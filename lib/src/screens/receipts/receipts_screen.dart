@@ -59,10 +59,12 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                   value: null,
                   child: Text('Alle winkels'),
                 ),
-                ..._storeNames.entries.map((entry) => DropdownMenuItem<int>(
-                  value: entry.key,
-                  child: Text(entry.value),
-                )),
+                ..._storeNames.entries.map(
+                  (entry) => DropdownMenuItem<int>(
+                    value: entry.key,
+                    child: Text(entry.value),
+                  ),
+                ),
               ],
               onChanged: (value) => setState(() => _selectedStoreId = value),
             ),

@@ -16,18 +16,12 @@ class ReceiptTile extends StatelessWidget {
 
   String formatDate(DateTime date) =>
       "${date.day.toString().padLeft(2, '0')}/"
-          "${date.month.toString().padLeft(2, '0')}/"
-          "${date.year}";
-
-  String formatToEan13(String input) {
-    final digits = input.replaceAll(RegExp(r'\D'), '');
-    return digits.padLeft(13, '0').substring(0, 13);
-  }
+      "${date.month.toString().padLeft(2, '0')}/"
+      "${date.year}";
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final formattedBarcode = formatToEan13(receipt.code);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
