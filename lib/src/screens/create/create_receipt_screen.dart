@@ -125,10 +125,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
 
     AppSettings.lastChosenStoreId.set(_selectedStore!.id);
 
-    DateTime? expiryDate =
-        _selectedExpiryTime!.duration != null
-            ? DateTime.now().add(_selectedExpiryTime!.duration!)
-            : null;
+    DateTime? expiryDate = _selectedExpiryTime?.getExpiryDate(DateTime.now());
 
     await _database
         .into(_database.receipts)
