@@ -15,9 +15,7 @@ class AmountDetectorHelper {
 
   final Uint8List imageBytes;
 
-  const AmountDetectorHelper({
-    required this.imageBytes,
-  });
+  const AmountDetectorHelper({required this.imageBytes});
 
   Future<InputImage> _createInputImageFromBytes() async {
     final tempDir = await getTemporaryDirectory();
