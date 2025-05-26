@@ -17,8 +17,8 @@ class ReceiptTile extends StatelessWidget {
 
   String formatDate(DateTime date) =>
       "${date.day.toString().padLeft(2, '0')}/"
-          "${date.month.toString().padLeft(2, '0')}/"
-          "${date.year}";
+      "${date.month.toString().padLeft(2, '0')}/"
+      "${date.year}";
 
   @override
   Widget build(BuildContext context) {
