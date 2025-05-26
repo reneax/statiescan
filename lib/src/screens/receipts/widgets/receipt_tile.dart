@@ -7,11 +7,7 @@ class ReceiptTile extends StatelessWidget {
   final Receipt receipt;
   final VoidCallback? onTap;
 
-  const ReceiptTile({
-    super.key,
-    required this.receipt,
-    this.onTap,
-  });
+  const ReceiptTile({super.key, required this.receipt, this.onTap});
 
   String formatDate(DateTime date) =>
       "${date.day.toString().padLeft(2, '0')}/"
