@@ -30,8 +30,19 @@ class $StoresTable extends Stores with TableInfo<$StoresTable, Store> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _lastExpiryTimeIdMeta = const VerificationMeta(
+    'lastExpiryTimeId',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, name];
+  late final GeneratedColumn<int> lastExpiryTimeId = GeneratedColumn<int>(
+    'last_expiry_time_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, lastExpiryTimeId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -55,6 +66,15 @@ class $StoresTable extends Stores with TableInfo<$StoresTable, Store> {
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('last_expiry_time_id')) {
+      context.handle(
+        _lastExpiryTimeIdMeta,
+        lastExpiryTimeId.isAcceptableOrUnknown(
+          data['last_expiry_time_id']!,
+          _lastExpiryTimeIdMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -74,6 +94,10 @@ class $StoresTable extends Stores with TableInfo<$StoresTable, Store> {
             DriftSqlType.string,
             data['${effectivePrefix}name'],
           )!,
+      lastExpiryTimeId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}last_expiry_time_id'],
+      ),
     );
   }
 
@@ -86,17 +110,28 @@ class $StoresTable extends Stores with TableInfo<$StoresTable, Store> {
 class Store extends DataClass implements Insertable<Store> {
   final int id;
   final String name;
-  const Store({required this.id, required this.name});
+  final int? lastExpiryTimeId;
+  const Store({required this.id, required this.name, this.lastExpiryTimeId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
+    if (!nullToAbsent || lastExpiryTimeId != null) {
+      map['last_expiry_time_id'] = Variable<int>(lastExpiryTimeId);
+    }
     return map;
   }
 
   StoresCompanion toCompanion(bool nullToAbsent) {
-    return StoresCompanion(id: Value(id), name: Value(name));
+    return StoresCompanion(
+      id: Value(id),
+      name: Value(name),
+      lastExpiryTimeId:
+          lastExpiryTimeId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(lastExpiryTimeId),
+    );
   }
 
   factory Store.fromJson(
@@ -107,6 +142,7 @@ class Store extends DataClass implements Insertable<Store> {
     return Store(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      lastExpiryTimeId: serializer.fromJson<int?>(json['lastExpiryTimeId']),
     );
   }
   @override
@@ -115,15 +151,30 @@ class Store extends DataClass implements Insertable<Store> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
+      'lastExpiryTimeId': serializer.toJson<int?>(lastExpiryTimeId),
     };
   }
 
-  Store copyWith({int? id, String? name}) =>
-      Store(id: id ?? this.id, name: name ?? this.name);
+  Store copyWith({
+    int? id,
+    String? name,
+    Value<int?> lastExpiryTimeId = const Value.absent(),
+  }) => Store(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    lastExpiryTimeId:
+        lastExpiryTimeId.present
+            ? lastExpiryTimeId.value
+            : this.lastExpiryTimeId,
+  );
   Store copyWithCompanion(StoresCompanion data) {
     return Store(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      lastExpiryTimeId:
+          data.lastExpiryTimeId.present
+              ? data.lastExpiryTimeId.value
+              : this.lastExpiryTimeId,
     );
   }
 
@@ -131,40 +182,59 @@ class Store extends DataClass implements Insertable<Store> {
   String toString() {
     return (StringBuffer('Store(')
           ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('lastExpiryTimeId: $lastExpiryTimeId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name);
+  int get hashCode => Object.hash(id, name, lastExpiryTimeId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Store && other.id == this.id && other.name == this.name);
+      (other is Store &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.lastExpiryTimeId == this.lastExpiryTimeId);
 }
 
 class StoresCompanion extends UpdateCompanion<Store> {
   final Value<int> id;
   final Value<String> name;
+  final Value<int?> lastExpiryTimeId;
   const StoresCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.lastExpiryTimeId = const Value.absent(),
   });
-  StoresCompanion.insert({this.id = const Value.absent(), required String name})
-    : name = Value(name);
+  StoresCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    this.lastExpiryTimeId = const Value.absent(),
+  }) : name = Value(name);
   static Insertable<Store> custom({
     Expression<int>? id,
     Expression<String>? name,
+    Expression<int>? lastExpiryTimeId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (lastExpiryTimeId != null) 'last_expiry_time_id': lastExpiryTimeId,
     });
   }
 
-  StoresCompanion copyWith({Value<int>? id, Value<String>? name}) {
-    return StoresCompanion(id: id ?? this.id, name: name ?? this.name);
+  StoresCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<int?>? lastExpiryTimeId,
+  }) {
+    return StoresCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      lastExpiryTimeId: lastExpiryTimeId ?? this.lastExpiryTimeId,
+    );
   }
 
   @override
@@ -176,6 +246,9 @@ class StoresCompanion extends UpdateCompanion<Store> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (lastExpiryTimeId.present) {
+      map['last_expiry_time_id'] = Variable<int>(lastExpiryTimeId.value);
+    }
     return map;
   }
 
@@ -183,7 +256,8 @@ class StoresCompanion extends UpdateCompanion<Store> {
   String toString() {
     return (StringBuffer('StoresCompanion(')
           ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('lastExpiryTimeId: $lastExpiryTimeId')
           ..write(')'))
         .toString();
   }
@@ -613,9 +687,17 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 }
 
 typedef $$StoresTableCreateCompanionBuilder =
-    StoresCompanion Function({Value<int> id, required String name});
+    StoresCompanion Function({
+      Value<int> id,
+      required String name,
+      Value<int?> lastExpiryTimeId,
+    });
 typedef $$StoresTableUpdateCompanionBuilder =
-    StoresCompanion Function({Value<int> id, Value<String> name});
+    StoresCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<int?> lastExpiryTimeId,
+    });
 
 final class $$StoresTableReferences
     extends BaseReferences<_$AppDatabase, $StoresTable, Store> {
@@ -657,6 +739,11 @@ class $$StoresTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lastExpiryTimeId => $composableBuilder(
+    column: $table.lastExpiryTimeId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -704,6 +791,11 @@ class $$StoresTableOrderingComposer
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get lastExpiryTimeId => $composableBuilder(
+    column: $table.lastExpiryTimeId,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$StoresTableAnnotationComposer
@@ -720,6 +812,11 @@ class $$StoresTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get lastExpiryTimeId => $composableBuilder(
+    column: $table.lastExpiryTimeId,
+    builder: (column) => column,
+  );
 
   Expression<T> receiptsRefs<T extends Object>(
     Expression<T> Function($$ReceiptsTableAnnotationComposer a) f,
@@ -777,10 +874,22 @@ class $$StoresTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-              }) => StoresCompanion(id: id, name: name),
+                Value<int?> lastExpiryTimeId = const Value.absent(),
+              }) => StoresCompanion(
+                id: id,
+                name: name,
+                lastExpiryTimeId: lastExpiryTimeId,
+              ),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String name}) =>
-                  StoresCompanion.insert(id: id, name: name),
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                Value<int?> lastExpiryTimeId = const Value.absent(),
+              }) => StoresCompanion.insert(
+                id: id,
+                name: name,
+                lastExpiryTimeId: lastExpiryTimeId,
+              ),
           withReferenceMapper:
               (p0) =>
                   p0
