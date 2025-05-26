@@ -6,12 +6,10 @@ import 'package:statiescan/src/utils/amount_formatter.dart';
 class ReceiptTile extends StatelessWidget {
   final Receipt receipt;
   final VoidCallback? onTap;
-  final String storeName;
 
   const ReceiptTile({
     super.key,
     required this.receipt,
-    required this.storeName,
     this.onTap,
   });
 
