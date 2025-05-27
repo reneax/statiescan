@@ -18,6 +18,7 @@ class StoresDropdown extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: DropdownButtonFormField<int>(
+        value: selectedStoreId,
         isExpanded: true,
         decoration: const InputDecoration(
           labelText: 'Filter op winkel',
