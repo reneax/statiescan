@@ -35,11 +35,11 @@ class _ScanScreenState extends State<ScanScreen> {
           await AmountDetectorHelper(imageBytes: capture.image!).find();
     }
 
+    if (!mounted) return;
+
     if (AppSettings.vibrationEnabled.get()) {
       Vibration.vibrate(duration: 100);
     }
-
-    if (!mounted) return;
 
     context.pushReplacementNamed(
       'createReceipt',

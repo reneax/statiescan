@@ -11,21 +11,6 @@ class ScannerSection extends StatefulWidget {
 }
 
 class _ScannerSectionState extends State<ScannerSection> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void _toggleVibration(bool enabled) {
-    setState(() {
-      AppSettings.vibrationEnabled.set(enabled);
-    });
-
-    if (enabled) {
-      Vibration.vibrate(duration: 100);
-    }
-  }
-
   void _toggleAutomaticAmountDetection(bool enabled) {
     setState(() {
       AppSettings.automaticAmountDetection.set(enabled);
@@ -38,15 +23,9 @@ class _ScannerSectionState extends State<ScannerSection> {
       title: "Scanner",
       children: [
         SwitchListTile(
-          title: const Text("Trillen bij scannen"),
-          secondary: const Icon(Icons.vibration),
-          value: AppSettings.vibrationEnabled.get(),
-          onChanged: _toggleVibration,
-        ),
-        SwitchListTile(
           title: const Text("Automatisch bedrag invullen"),
           subtitle: const Text(
-            "Vult automatisch het bonbedrag in. (Vereist meer rekenkracht)",
+            "[BETA] Vult automatisch het bonbedrag in.",
           ),
           secondary: const Icon(Icons.price_check),
           value: AppSettings.automaticAmountDetection.get(),

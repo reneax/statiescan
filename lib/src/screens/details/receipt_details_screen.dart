@@ -6,12 +6,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/details/widgets/information_card/actions_row.dart';
 import 'package:statiescan/src/screens/details/widgets/information_card/information_card.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
 import 'package:statiescan/src/widgets/barcode_display.dart';
 import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
+import 'package:vibration/vibration.dart';
 
 class ReceiptDetailsScreen extends StatefulWidget {
   final int receiptId;
@@ -89,6 +91,10 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
       ..where((receipt) => receipt.id.equals(_receipt!.id))).go();
 
     if (!mounted) return;
+
+    if (AppSettings.vibrationEnabled.get()) {
+      Vibration.vibrate(duration: 100);
+    }
 
     SnackbarCreator.show(
       context,
