@@ -24,9 +24,7 @@ class _ScannerSectionState extends State<ScannerSection> {
       children: [
         SwitchListTile(
           title: const Text("Automatisch bedrag invullen"),
-          subtitle: const Text(
-            "[BETA] Vult automatisch het bonbedrag in.",
-          ),
+          subtitle: const Text("[BETA] Vult automatisch het bonbedrag in."),
           secondary: const Icon(Icons.price_check),
           value: AppSettings.automaticAmountDetection.get(),
           onChanged: _toggleAutomaticAmountDetection,
