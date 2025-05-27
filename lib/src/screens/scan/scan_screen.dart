@@ -41,8 +41,12 @@ class _ScanScreenState extends State<ScanScreen> {
 
     if (!mounted) return;
 
-    context.pushReplacement(
-      '/create?barcode=${barcode.rawValue}&amount=$amountInCents',
+    context.pushReplacementNamed(
+      'createReceipt',
+      queryParameters: {
+        'barcode': barcode.rawValue!,
+        'amount': amountInCents.toString(),
+      },
     );
   }
 

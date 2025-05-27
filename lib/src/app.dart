@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:statiescan/src/router.dart';
 import 'package:statiescan/src/theme.dart';
 import 'package:statiescan/src/utils/image_cache.dart';
@@ -9,6 +10,7 @@ class StatiescanApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ImageCacheHelper(context).cacheImages();
+    initializeDateFormatting('nl');
 
     return MaterialApp.router(
       title: 'Statiescan',

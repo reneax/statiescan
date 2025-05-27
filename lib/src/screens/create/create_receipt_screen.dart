@@ -6,7 +6,7 @@ import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/create/enums/expiry_time.dart';
 import 'package:statiescan/src/screens/create/widgets/add_store_dialog.dart';
 import 'package:statiescan/src/screens/create/widgets/amount_input_field.dart';
-import 'package:statiescan/src/screens/create/widgets/barcode_display.dart';
+import 'package:statiescan/src/widgets/barcode_display.dart';
 import 'package:statiescan/src/screens/create/widgets/expiry_time_dropdown.dart';
 import 'package:statiescan/src/screens/create/widgets/store_dropdown.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
@@ -151,6 +151,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     if (mounted) {
       SnackbarCreator.show(
         context,
+        duration: Duration(seconds: 2),
         message: "De bon is succesvol opgeslagen.",
         status: SnackbarStatus.success,
       );
