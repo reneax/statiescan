@@ -52,6 +52,8 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return DefaultScreenScaffold(
       appBar: AppBar(title: const Text("Bonnen")),
       child: StreamBuilder<Map<Store, List<Receipt>>>(
@@ -69,6 +71,29 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                       ? store.id != _selectedStoreId
                       : receipts.isEmpty,
             );
+
+          if (filteredStores.isEmpty) {
+            return Center(
+              child: Column(
+                spacing: 8,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Geen bonnen gevonden.",
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  Text(
+                    "Voeg een nieuwe bon toe met het plusicoon onderaan.",
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
+
+          }
 
           return CustomScrollView(
             slivers: [
