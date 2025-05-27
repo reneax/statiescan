@@ -5,6 +5,7 @@ import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/screens/receipts/widgets/receipt_tile/receipt_tile.dart';
 import 'package:statiescan/src/screens/receipts/widgets/store_header.dart';
 import 'package:statiescan/src/screens/receipts/widgets/stores_dropdown.dart';
+import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
 
 class ReceiptsScreen extends StatefulWidget {
@@ -48,6 +49,14 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
 
       return map;
     });
+  }
+
+  String _getTotalAmountFromReceipts(List<Receipt> receipts) {
+    int amountInCents = receipts
+        .map((receipt) => receipt.amountInCents)
+        .fold(0, (sum, amount) => sum + amount);
+
+    return "€${AmountFormatter.amountToString(amountInCents)}";
   }
 
   @override
@@ -105,7 +114,10 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
               ),
               ...filteredStores.entries.map(
                 (entry) => SliverStickyHeader(
-                  header: StoreHeader(title: entry.key.name),
+                  header: StoreHeader(
+                    title: entry.key.name,
+                    amount: _getTotalAmountFromReceipts(entry.value),
+                  ),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
                       childCount: entry.value.length,
