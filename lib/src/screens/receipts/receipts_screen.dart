@@ -79,7 +79,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Geen bonnen gevonden.",
+                    "Geen bonnen gevonden",
                     style: theme.textTheme.titleMedium,
                   ),
                   Text(
@@ -92,7 +92,6 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                 ],
               ),
             );
-
           }
 
           return CustomScrollView(
