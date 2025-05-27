@@ -97,7 +97,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   void _handleAddStore() async {
     final newStoreName = await showDialog<String>(
       context: context,
-      builder: (context) => const AddStoreDialog(),
+      builder: (context) => AddStoreDialog(existingStores: _stores,),
     );
 
     if (newStoreName == null || newStoreName.isEmpty) return;

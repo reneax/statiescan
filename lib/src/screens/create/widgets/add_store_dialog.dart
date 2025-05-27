@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/database/app_database.dart';
 
 class AddStoreDialog extends StatefulWidget {
-  const AddStoreDialog({super.key});
+  final List<Store> existingStores;
+
+  const AddStoreDialog({super.key, required this.existingStores});
 
   @override
   State<AddStoreDialog> createState() => _AddStoreDialogState();
@@ -33,6 +36,13 @@ class _AddStoreDialogState extends State<AddStoreDialog> {
             if (value == null || value.trim().isEmpty) {
               return 'Voer een winkelnaam in';
             }
+
+            if (widget.existingStores
+                .map((store) => store.name)
+                .contains(value)) {
+              return 'Deze winkel bestaat al.';
+            }
+
             return null;
           },
         ),
