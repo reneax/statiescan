@@ -26,7 +26,7 @@ class IntroDotIndicator extends StatelessWidget {
             color:
                 isActive
                     ? Theme.of(context).colorScheme.primary
-                    : Colors.grey[400],
+                    : Colors.grey.shade400,
           ),
         );
       }),

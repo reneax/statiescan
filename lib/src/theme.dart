@@ -10,8 +10,6 @@ ThemeData appTheme(Brightness brightness) {
     useMaterial3: true,
     brightness: brightness,
     colorScheme: colorScheme,
-    appBarTheme: AppBarTheme(
-      elevation: 4,
-    ),
+    appBarTheme: AppBarTheme(elevation: 4),
   );
 }

@@ -6,7 +6,7 @@ import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/create/enums/expiry_time.dart';
 import 'package:statiescan/src/screens/create/widgets/add_store_dialog.dart';
 import 'package:statiescan/src/screens/create/widgets/amount_input_field.dart';
-import 'package:statiescan/src/screens/create/widgets/barcode_display.dart';
+import 'package:statiescan/src/widgets/barcode_display.dart';
 import 'package:statiescan/src/screens/create/widgets/expiry_time_dropdown.dart';
 import 'package:statiescan/src/screens/create/widgets/store_dropdown.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
@@ -32,6 +32,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode _amountFocusNode = FocusNode();
   final TextEditingController _amountController = TextEditingController();
+  bool _isLoading = true;
   Store? _selectedStore;
   ExpiryTime? _selectedExpiryTime;
   List<Store> _stores = [];
@@ -39,8 +40,9 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   @override
   void initState() {
     super.initState();
+    _isLoading = true;
     _handleAmountField();
-    _initializeState();
+    _initializeSavedState();
   }
 
   @override
@@ -53,6 +55,12 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   void _handleStoreChanged(Store? store) {
     setState(() {
       _selectedStore = store;
+      if (_selectedStore != null) {
+        _selectedExpiryTime =
+            ExpiryTime.values
+                .where((e) => e.id == _selectedStore!.lastExpiryTimeId)
+                .firstOrNull;
+      }
     });
   }
 
@@ -74,21 +82,22 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     }
   }
 
-  Future<void> _initializeState() async {
+  Future<void> _initializeSavedState() async {
     final stores = await _loadStores();
-    final (store, expiry) = await _loadLastOptions();
+    final (store, expiryTime) = await _loadLastOptions(stores);
 
     setState(() {
       _stores = stores;
       _selectedStore = store;
-      _selectedExpiryTime = expiry;
+      _selectedExpiryTime = expiryTime;
+      _isLoading = false;
     });
   }
 
   void _handleAddStore() async {
     final newStoreName = await showDialog<String>(
       context: context,
-      builder: (context) => const AddStoreDialog(),
+      builder: (context) => AddStoreDialog(existingStores: _stores),
     );
 
     if (newStoreName == null || newStoreName.isEmpty) return;
@@ -102,6 +111,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     setState(() {
       _stores = stores;
       _selectedStore = stores.firstWhere((s) => s.id == newStoreId);
+      _selectedExpiryTime = null;
     });
   }
 
@@ -114,12 +124,8 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
         AmountFormatter.stringToAmount(_amountController.text)!;
 
     AppSettings.lastChosenStoreId.set(_selectedStore!.id);
-    AppSettings.lastChosenExpiryTimeId.set(_selectedExpiryTime!.id);
 
-    DateTime? expiryDate =
-        _selectedExpiryTime!.days != null
-            ? DateTime.now().add(Duration(days: _selectedExpiryTime!.days!))
-            : null;
+    DateTime? expiryDate = _selectedExpiryTime?.getExpiryDate(DateTime.now());
 
     await _database
         .into(_database.receipts)
@@ -132,9 +138,17 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
           ),
         );
 
+    if (_selectedExpiryTime!.id != _selectedStore!.lastExpiryTimeId) {
+      await (_database.update(_database.stores)
+        ..where((tbl) => tbl.id.equals(_selectedStore!.id))).write(
+        StoresCompanion(lastExpiryTimeId: drift.Value(_selectedExpiryTime!.id)),
+      );
+    }
+
     if (mounted) {
       SnackbarCreator.show(
         context,
+        duration: Duration(seconds: 2),
         message: "De bon is succesvol opgeslagen.",
         status: SnackbarStatus.success,
       );
@@ -147,25 +161,24 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     return _database.select(_database.stores).get();
   }
 
-  Future<(Store?, ExpiryTime?)> _loadLastOptions() async {
+  Future<(Store?, ExpiryTime?)> _loadLastOptions(List<Store> stores) async {
     int? lastStoreId = AppSettings.lastChosenStoreId.get();
-    int? lastExpiryTimeId = AppSettings.lastChosenExpiryTimeId.get();
 
     Store? store;
-    ExpiryTime? expiry;
+    ExpiryTime? expiryTime;
 
     if (lastStoreId != null) {
-      store =
-          await (_database.select(_database.stores)
-            ..where((tbl) => tbl.id.equals(lastStoreId))).getSingleOrNull();
+      store = stores.where((s) => s.id == lastStoreId).firstOrNull;
     }
 
-    if (lastExpiryTimeId != null) {
-      expiry =
-          ExpiryTime.values.where((e) => e.id == lastExpiryTimeId).firstOrNull;
+    if (store != null && store.lastExpiryTimeId != null) {
+      expiryTime =
+          ExpiryTime.values
+              .where((e) => e.id == store!.lastExpiryTimeId)
+              .firstOrNull;
     }
 
-    return (store, expiry);
+    return (store, expiryTime);
   }
 
   @override
@@ -187,23 +200,16 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
                   editingController: _amountController,
                   focusNode: _amountFocusNode,
                 ),
+                StoreDropdown(
+                  isLoading: _isLoading,
+                  selectedStore: _selectedStore,
+                  stores: _stores,
+                  onStoreAdd: _handleAddStore,
+                  onStoreChanged: _handleStoreChanged,
+                ),
                 ExpiryTimeDropdown(
                   selectedExpiryTime: _selectedExpiryTime,
                   onTimeChanged: _handleTimeChanged,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    StoreDropdown(
-                      selectedStore: _selectedStore,
-                      stores: _stores,
-                      onStoreChanged: _handleStoreChanged,
-                    ),
-                    TextButton(
-                      onPressed: _handleAddStore,
-                      child: Text("Nieuwe winkel toevoegen"),
-                    ),
-                  ],
                 ),
                 FilledButton.icon(
                   icon: const Icon(Icons.save),

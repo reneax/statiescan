@@ -1,0 +1,46 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/screens/details/widgets/information_card/widgets/icon_text.dart';
+import 'package:statiescan/src/utils/amount_formatter.dart';
+
+class ReceiptInformationCard extends StatelessWidget {
+  final Receipt receipt;
+  final Store store;
+
+  const ReceiptInformationCard({
+    super.key,
+    required this.receipt,
+    required this.store,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    DateFormat dateFormat = DateFormat.yMMMMd('nl');
+
+    return Card(
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          spacing: 10,
+          children: [
+            IconText(iconData: Icons.store, text: store.name),
+            IconText(
+              iconData: Icons.euro,
+              text:
+                  "Het bedrag is €${AmountFormatter.amountToString(receipt.amountInCents)}",
+            ),
+            IconText(
+              iconData: Icons.access_time,
+              text:
+                  receipt.expiresAt == null
+                      ? "Geen verloopdatum"
+                      : "Verloopt op ${dateFormat.format(receipt.expiresAt!)}",
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
