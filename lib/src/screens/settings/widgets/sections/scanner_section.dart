@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/settings/widgets/settings_section.dart';
-import 'package:vibration/vibration.dart';
 
 class ScannerSection extends StatefulWidget {
   const ScannerSection({super.key});
