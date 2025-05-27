@@ -85,7 +85,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                   Text(
                     "Voeg een nieuwe bon toe met het plusicoon onderaan.",
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
+                      color: Colors.grey.shade600,
                     ),
                     textAlign: TextAlign.center,
                   ),
