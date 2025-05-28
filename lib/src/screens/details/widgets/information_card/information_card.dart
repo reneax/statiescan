@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/screens/details/widgets/information_card/widgets/icon_text.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
+import 'package:statiescan/src/utils/date_utilities.dart';
 
 class ReceiptInformationCard extends StatelessWidget {
   final Receipt receipt;
@@ -16,8 +16,6 @@ class ReceiptInformationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateFormat dateFormat = DateFormat.yMMMMd('nl');
-
     return Card(
       elevation: 3,
       child: Padding(
@@ -33,10 +31,7 @@ class ReceiptInformationCard extends StatelessWidget {
             ),
             IconText(
               iconData: Icons.access_time,
-              text:
-                  receipt.expiresAt == null
-                      ? "Geen verloopdatum"
-                      : "Verloopt op ${dateFormat.format(receipt.expiresAt!)}",
+              text: DateUtilities.getExpiryText(receipt.expiresAt),
             ),
           ],
         ),

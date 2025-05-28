@@ -64,9 +64,9 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     });
   }
 
-  void _handleTimeChanged(ExpiryTime? expireTime) {
+  void _handleTimeChanged(ExpiryTime? expiryTime) {
     setState(() {
-      _selectedExpiryTime = expireTime;
+      _selectedExpiryTime = expiryTime;
     });
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:statiescan/src/utils/date_utilities.dart';
 
 class ReceiptDetails extends StatelessWidget {
   final DateTime? expiresAt;
@@ -30,9 +31,7 @@ class ReceiptDetails extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 6),
             child: Text(
-              (expiresAt == null
-                  ? "Geen verloopdatum"
-                  : "Verloopt op ${dateFormat.format(expiresAt!)}"),
+              DateUtilities.getExpiryText(expiresAt),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurface.withAlpha(150),
                 fontSize: 12,
