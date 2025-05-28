@@ -54,7 +54,10 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
   }
 
   void _handleShareButton() async {
-    if (_receipt == null || _store == null) return;
+    final currentReceipt = _receipt;
+    final currentStore = _store;
+
+    if (currentReceipt == null || currentStore == null) return;
 
     final imageBytes = await _screenshotController.captureFromWidget(
       BarcodeDisplay(barcode: _receipt!.code, height: 150, width: 300),
@@ -68,13 +71,13 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
 
     final params = ShareParams(
       text:
-          'Emballage bon van €${AmountFormatter.amountToString(_receipt!.amountInCents)} die je kunt inleveren bij ${_store!.name}. Verstuurd vanaf de Statiescan app.',
+          'Emballage bon van €${AmountFormatter.amountToString(currentReceipt.amountInCents)} die je kunt inleveren bij ${currentStore.name}. Verstuurd vanaf de Statiescan app.',
       files: [XFile(tempFile.path)],
     );
 
     final result = await SharePlus.instance.share(params);
 
-    if (result.status == ShareResultStatus.success && mounted) {
+    if (mounted && result.status == ShareResultStatus.success) {
       SnackbarCreator.show(
         context,
         status: SnackbarStatus.info,
@@ -85,10 +88,12 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
   }
 
   void _deleteReceipt() async {
-    if (_receipt == null) return;
+    final currentReceipt = _receipt;
+
+    if (currentReceipt == null) return;
 
     await (_database.delete(_database.receipts)
-      ..where((receipt) => receipt.id.equals(_receipt!.id))).go();
+      ..where((receipt) => receipt.id.equals(currentReceipt.id))).go();
 
     if (!mounted) return;
 
@@ -128,25 +133,33 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-          child:
-              _receipt == null || _store == null
-                  ? Center(child: CircularProgressIndicator())
-                  : Column(
-                    spacing: 20,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BarcodeDisplay(
-                        barcode: _receipt!.code,
-                        height: 150,
-                        width: 300,
-                      ),
-                      ReceiptInformationCard(
-                        receipt: _receipt!,
-                        store: _store!,
-                      ),
-                      ActionsRow(onShareButtonPress: _handleShareButton),
-                    ],
+          child: Builder(
+            builder: (context) {
+              final currentReceipt = _receipt;
+              final currentStore = _store;
+
+              if (currentReceipt == null || currentStore == null) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              return Column(
+                spacing: 20,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BarcodeDisplay(
+                    barcode: currentReceipt.code,
+                    height: 150,
+                    width: 300,
                   ),
+                  ReceiptInformationCard(
+                    receipt: currentReceipt,
+                    store: currentStore,
+                  ),
+                  ActionsRow(onShareButtonPress: _handleShareButton),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

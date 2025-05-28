@@ -19,20 +19,20 @@ class _ScanScreenState extends State<ScanScreen> {
 
   void _onBarcodeDetect(BarcodeCapture capture) async {
     Barcode barcode = capture.barcodes.first;
+    String? rawValue = barcode.rawValue;
 
-    if (barcode.rawValue == null) {
-      return;
-    }
+    if (rawValue == null) return;
 
     int? amountInCents;
+    final capturedImage = capture.image;
 
-    if (capture.image != null) {
+    if (capturedImage != null) {
       setState(() {
         _isProcessing = true;
       });
 
       amountInCents =
-          await AmountDetectorHelper(imageBytes: capture.image!).find();
+          await AmountDetectorHelper(imageBytes: capturedImage).find();
     }
 
     if (!mounted) return;
@@ -44,7 +44,7 @@ class _ScanScreenState extends State<ScanScreen> {
     context.pushReplacementNamed(
       'createReceipt',
       queryParameters: {
-        'barcode': barcode.rawValue!,
+        'barcode': rawValue,
         'amount': amountInCents.toString(),
       },
     );
