@@ -31,7 +31,7 @@ class ReceiptInformationCard extends StatelessWidget {
             ),
             IconText(
               iconData: Icons.access_time,
-              text: DateUtilities.getExpiryText(receipt.expiresAt),
+              text: DateUtilities.getExpiryText(receipt.expiresAt, false),
             ),
           ],
         ),
