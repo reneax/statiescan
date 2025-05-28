@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:statiescan/src/utils/date_utilities.dart';
 
 class ReceiptDetails extends StatelessWidget {
@@ -15,7 +14,6 @@ class ReceiptDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    DateFormat dateFormat = DateFormat.yMd('nl');
 
     return Expanded(
       child: Column(
