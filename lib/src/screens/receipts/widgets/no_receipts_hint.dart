@@ -12,10 +12,7 @@ class NoReceiptsHint extends StatelessWidget {
         spacing: 8,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            "Geen bonnen gevonden",
-            style: theme.textTheme.titleMedium,
-          ),
+          Text("Geen bonnen gevonden", style: theme.textTheme.titleMedium),
           Text(
             "Voeg een nieuwe bon toe met het plusicoon onderaan.",
             style: theme.textTheme.bodyMedium?.copyWith(
