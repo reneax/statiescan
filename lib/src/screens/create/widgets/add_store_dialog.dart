@@ -15,10 +15,15 @@ class _AddStoreDialogState extends State<AddStoreDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _onSave() {
-    if (_formKey.currentState!.validate()) {
-      final name = _controller.text.trim();
-      Navigator.of(context).pop(name);
+    final currentFormState = _formKey.currentState;
+
+    if (currentFormState == null || !currentFormState.validate()) {
+      return;
     }
+
+    final name = _controller.text.trim();
+
+    Navigator.of(context).pop(name);
   }
 
   @override
