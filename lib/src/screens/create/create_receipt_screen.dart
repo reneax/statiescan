@@ -6,11 +6,11 @@ import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/create/enums/expiry_time.dart';
 import 'package:statiescan/src/screens/create/widgets/add_store_dialog.dart';
 import 'package:statiescan/src/screens/create/widgets/amount_input_field.dart';
-import 'package:statiescan/src/widgets/barcode_display.dart';
 import 'package:statiescan/src/screens/create/widgets/expiry_time_dropdown.dart';
 import 'package:statiescan/src/screens/create/widgets/store_dropdown.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
+import 'package:statiescan/src/widgets/barcode_display.dart';
 import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
 
 class CreateReceiptScreen extends StatefulWidget {
@@ -55,10 +55,11 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   void _handleStoreChanged(Store? store) {
     setState(() {
       _selectedStore = store;
-      if (_selectedStore != null) {
+
+      if (store != null) {
         _selectedExpiryTime =
             ExpiryTime.values
-                .where((e) => e.id == _selectedStore!.lastExpiryTimeId)
+                .where((e) => e.id == store.lastExpiryTimeId)
                 .firstOrNull;
       }
     });
@@ -71,10 +72,10 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   }
 
   void _handleAmountField() {
-    if (widget.amountInCents != null) {
-      _amountController.text = AmountFormatter.amountToString(
-        widget.amountInCents!,
-      );
+    final amountInCents = widget.amountInCents;
+
+    if (amountInCents != null) {
+      _amountController.text = AmountFormatter.amountToString(amountInCents);
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _amountFocusNode.requestFocus();
@@ -116,16 +117,23 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   }
 
   void _saveReceipt() async {
-    if (!_formKey.currentState!.validate()) {
+    final currentFormState = _formKey.currentState;
+
+    if (currentFormState == null || !currentFormState.validate()) {
       return;
     }
+
+    final currentStore = _selectedStore;
+    final currentExpiryTime = _selectedExpiryTime;
+
+    if (currentStore == null || currentExpiryTime == null) return;
 
     int formattedAmount =
         AmountFormatter.stringToAmount(_amountController.text)!;
 
-    AppSettings.lastChosenStoreId.set(_selectedStore!.id);
+    AppSettings.lastChosenStoreId.set(currentStore.id);
 
-    DateTime? expiryDate = _selectedExpiryTime?.getExpiryDate(DateTime.now());
+    DateTime? expiryDate = currentExpiryTime.getExpiryDate(DateTime.now());
 
     await _database
         .into(_database.receipts)
@@ -134,14 +142,14 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
             code: widget.barcode,
             expiresAt: drift.Value(expiryDate),
             amountInCents: formattedAmount,
-            storeId: _selectedStore!.id,
+            storeId: currentStore.id,
           ),
         );
 
-    if (_selectedExpiryTime!.id != _selectedStore!.lastExpiryTimeId) {
+    if (currentExpiryTime.id != currentStore.lastExpiryTimeId) {
       await (_database.update(_database.stores)
-        ..where((tbl) => tbl.id.equals(_selectedStore!.id))).write(
-        StoresCompanion(lastExpiryTimeId: drift.Value(_selectedExpiryTime!.id)),
+        ..where((tbl) => tbl.id.equals(currentStore.id))).write(
+        StoresCompanion(lastExpiryTimeId: drift.Value(currentExpiryTime.id)),
       );
     }
 
@@ -171,11 +179,11 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
       store = stores.where((s) => s.id == lastStoreId).firstOrNull;
     }
 
-    if (store != null && store.lastExpiryTimeId != null) {
+    final expiryTimeId = store?.lastExpiryTimeId;
+
+    if (expiryTimeId != null) {
       expiryTime =
-          ExpiryTime.values
-              .where((e) => e.id == store!.lastExpiryTimeId)
-              .firstOrNull;
+          ExpiryTime.values.where((e) => e.id == expiryTimeId).firstOrNull;
     }
 
     return (store, expiryTime);

@@ -43,7 +43,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
         map.putIfAbsent(store, () => []);
 
         if (receipt != null) {
-          map[store]!.add(receipt);
+          map[store]?.add(receipt);
         }
       }
 
