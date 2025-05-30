@@ -4,11 +4,13 @@ class AmountFormatter {
   }
 
   static int? stringToAmount(String amountString) {
-    final cleaned = amountString.trim().replaceAll(',', '.');
-    final parsed = double.tryParse(cleaned);
+    try {
+      final cleaned = amountString.trim().replaceAll(',', '.');
+      final parsed = double.parse(cleaned);
 
-    if (parsed == null) return null;
-
-    return (parsed * 100).round();
+      return (parsed * 100).round();
+    } catch (ex) {
+      return null;
+    }
   }
 }
