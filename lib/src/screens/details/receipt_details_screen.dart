@@ -14,8 +14,7 @@ import 'package:statiescan/src/utils/snackbar_creator.dart';
 import 'package:statiescan/src/widgets/barcode_display.dart';
 import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
 import 'package:vibration/vibration.dart';
-
-import '../../utils/notification_service.dart';
+import 'package:statiescan/src/utils/notification_service.dart';
 
 class ReceiptDetailsScreen extends StatefulWidget {
   final int receiptId;
