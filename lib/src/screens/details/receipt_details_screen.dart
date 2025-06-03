@@ -15,6 +15,8 @@ import 'package:statiescan/src/widgets/barcode_display.dart';
 import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
 import 'package:vibration/vibration.dart';
 
+import '../../utils/notification_service.dart';
+
 class ReceiptDetailsScreen extends StatefulWidget {
   final int receiptId;
 
@@ -94,7 +96,9 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
 
     await (_database.delete(_database.receipts)
       ..where((receipt) => receipt.id.equals(currentReceipt.id))).go();
-
+    await NotificationService().cancelNotificationsForReceipt(
+      currentReceipt.id,
+    );
     if (!mounted) return;
 
     if (AppSettings.vibrationEnabled.get()) {

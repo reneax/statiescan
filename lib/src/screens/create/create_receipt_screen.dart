@@ -12,6 +12,7 @@ import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
 import 'package:statiescan/src/widgets/barcode_display.dart';
 import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
+import 'package:statiescan/src/utils/notification_service.dart';
 
 class CreateReceiptScreen extends StatefulWidget {
   final String barcode;
@@ -135,16 +136,28 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
 
     DateTime? expiryDate = currentExpiryTime.getExpiryDate(DateTime.now());
 
-    await _database
+    final insertedReceipt = await _database
         .into(_database.receipts)
-        .insert(
+        .insertReturning(
           ReceiptsCompanion.insert(
             code: widget.barcode,
             expiresAt: drift.Value(expiryDate),
             amountInCents: formattedAmount,
             storeId: currentStore.id,
+            createdAt: drift.Value(DateTime.now()),
           ),
         );
+
+    final receipt = Receipt(
+      id: insertedReceipt.id,
+      code: widget.barcode,
+      expiresAt: expiryDate,
+      amountInCents: formattedAmount,
+      storeId: currentStore.id,
+      createdAt: DateTime.now(),
+    );
+
+    await NotificationService().scheduleReceiptExpiryNotification(receipt);
 
     if (currentExpiryTime.id != currentStore.lastExpiryTimeId) {
       await (_database.update(_database.stores)

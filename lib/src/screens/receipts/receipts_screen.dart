@@ -8,6 +8,7 @@ import 'package:statiescan/src/screens/receipts/widgets/store_header.dart';
 import 'package:statiescan/src/screens/receipts/widgets/stores_dropdown.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
+import 'package:statiescan/src/utils/notification_permission_prompt.dart';
 
 class ReceiptsScreen extends StatefulWidget {
   const ReceiptsScreen({super.key});
@@ -64,54 +65,60 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
   Widget build(BuildContext context) {
     return DefaultScreenScaffold(
       appBar: AppBar(title: const Text("Bonnen")),
-      child: StreamBuilder<Map<Store, List<Receipt>>>(
-        stream: watchStoresWithReceipts(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      child: Stack(
+        children: [
+          StreamBuilder<Map<Store, List<Receipt>>>(
+            stream: watchStoresWithReceipts(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          final stores = snapshot.data!.keys.toList();
-          final filteredStores = Map<Store, List<Receipt>>.from(snapshot.data!)
-            ..removeWhere(
-              (store, receipts) =>
-                  _selectedStoreId != null
-                      ? store.id != _selectedStoreId
-                      : receipts.isEmpty,
-            );
+              final stores = snapshot.data!.keys.toList();
+              final filteredStores = Map<Store, List<Receipt>>.from(
+                snapshot.data!,
+              )..removeWhere(
+                (store, receipts) =>
+                    _selectedStoreId != null
+                        ? store.id != _selectedStoreId
+                        : receipts.isEmpty,
+              );
 
-          if (filteredStores.isEmpty) {
-            return NoReceiptsHint();
-          }
+              if (filteredStores.isEmpty) {
+                return NoReceiptsHint();
+              }
 
-          return CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: StoresDropdown(
-                  stores: stores,
-                  selectedStoreId: _selectedStoreId,
-                  onStoreChosen: _handleStorePicked,
-                ),
-              ),
-              ...filteredStores.entries.map(
-                (entry) => SliverStickyHeader(
-                  header: StoreHeader(
-                    title: entry.key.name,
-                    amount: _getTotalAmountFromReceipts(entry.value),
-                  ),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      childCount: entry.value.length,
-                      (context, index) =>
-                          ReceiptTile(receipt: entry.value[index]),
+              return CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: StoresDropdown(
+                      stores: stores,
+                      selectedStoreId: _selectedStoreId,
+                      onStoreChosen: _handleStorePicked,
                     ),
                   ),
-                ),
-              ),
-              SliverToBoxAdapter(child: SizedBox(height: 32)),
-            ],
-          );
-        },
+                  ...filteredStores.entries.map(
+                    (entry) => SliverStickyHeader(
+                      header: StoreHeader(
+                        title: entry.key.name,
+                        amount: _getTotalAmountFromReceipts(entry.value),
+                      ),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          childCount: entry.value.length,
+                          (context, index) =>
+                              ReceiptTile(receipt: entry.value[index]),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(child: SizedBox(height: 32)),
+                ],
+              );
+            },
+          ),
+          const NotificationPermissionPrompt(),
+        ],
       ),
     );
   }
