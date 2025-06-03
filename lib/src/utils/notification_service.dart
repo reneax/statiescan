@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:statiescan/src/database/app_database.dart';
@@ -56,6 +57,10 @@ class NotificationService {
   }
 
   Future<void> scheduleReceiptExpiryNotification(Receipt receipt) async {
+    if (!AppSettings.notificationsEnabled.get()) {
+      return;
+    }
+
     if (receipt.expiresAt == null) {
       return;
     }
@@ -69,8 +74,10 @@ class NotificationService {
 
     final String storeName = await _getStoreNameFromDb(receipt.storeId);
 
-    final Duration threeDays = const Duration(days: 3);
-    final DateTime scheduledNotificationDateTime = expiry.subtract(threeDays);
+    final int daysBefore = AppSettings.notificationDaysBeforeExpiry.get();
+    final Duration daysAdvance = Duration(days: daysBefore);
+
+    final DateTime scheduledNotificationDateTime = expiry.subtract(daysAdvance);
     final tz.TZDateTime receiptReminder;
 
     if (scheduledNotificationDateTime.isAfter(now)) {
@@ -88,7 +95,7 @@ class NotificationService {
     await _notificationsPlugin.zonedSchedule(
       receipt.id,
       'Bon verloopt binnenkort',
-      'Een bon van $storeName verloopt over 3 dagen.',
+      'Een bon van $storeName verloopt over $daysBefore ${daysBefore == 1 ? 'dag' : 'dagen'}.',
       receiptReminder,
       const NotificationDetails(
         android: AndroidNotificationDetails(

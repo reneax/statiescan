@@ -21,6 +21,21 @@ class _GeneralSectionState extends State<GeneralSection> {
     }
   }
 
+  void _toggleNotifications(bool enabled) {
+    setState(() {
+      AppSettings.notificationsEnabled.set(enabled);
+    });
+  }
+
+  int _notificationDays = AppSettings.notificationDaysBeforeExpiry.get();
+
+  void _updateNotificationDays(int days) {
+    setState(() {
+      _notificationDays = days;
+      AppSettings.notificationDaysBeforeExpiry.set(days);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SettingsSection(
@@ -31,6 +46,31 @@ class _GeneralSectionState extends State<GeneralSection> {
           secondary: const Icon(Icons.vibration),
           value: AppSettings.vibrationEnabled.get(),
           onChanged: _toggleVibration,
+        ),
+        SwitchListTile(
+          title: const Text("Meldingen ontvangen"),
+          secondary: const Icon(Icons.notifications_active),
+          value: AppSettings.notificationsEnabled.get(),
+          onChanged: _toggleNotifications,
+        ),
+        DropdownButtonFormField<int>(
+          value: _notificationDays,
+          decoration: const InputDecoration(
+            labelText: 'Dagen voor melding bon',
+            prefixIcon: Icon(Icons.event_note),
+          ),
+          items:
+              List.generate(10, (index) => index + 1)
+                  .map(
+                    (day) => DropdownMenuItem(
+                      value: day,
+                      child: Text('$day ${day == 1 ? "dag" : "dagen"}'),
+                    ),
+                  )
+                  .toList(),
+          onChanged: (value) {
+            if (value != null) _updateNotificationDays(value);
+          },
         ),
       ],
     );
