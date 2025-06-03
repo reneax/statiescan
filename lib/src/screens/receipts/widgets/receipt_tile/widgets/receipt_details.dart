@@ -29,10 +29,9 @@ class ReceiptDetails extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 6),
             child: Text(
-              DateUtilities.getExpiryText(expiresAt),
-              style: theme.textTheme.bodySmall?.copyWith(
+              DateUtilities.getExpiryText(expiresAt, true),
+              style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withAlpha(150),
-                fontSize: 12,
               ),
             ),
           ),
