@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class UIState with ChangeNotifier {
+class UIStateProvider with ChangeNotifier {
   Widget? _floatingActionButton;
 
   Widget? get floatingActionButton => _floatingActionButton;

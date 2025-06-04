@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:statiescan/src/providers/ui_state.dart';
+import 'package:statiescan/src/providers/ui_state_provider.dart';
 
 class ScreenWrapper extends StatefulWidget {
   final Widget? floatingActionButton;
@@ -25,7 +25,7 @@ class ScreenWrapper extends StatefulWidget {
 class _ScreenWrapperState extends State<ScreenWrapper> {
   void _updateUI() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final uiState = context.read<UIState>();
+      final uiState = context.read<UIStateProvider>();
       uiState.setState(widget.floatingActionButton);
     });
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:statiescan/src/providers/ui_state.dart';
+import 'package:statiescan/src/providers/ui_state_provider.dart';
 import 'package:statiescan/src/widgets/app_navigation_bar.dart';
 import 'package:statiescan/src/widgets/floating_add_button.dart';
 
@@ -11,7 +11,7 @@ class DefaultScreenScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uiState = context.watch<UIState>();
+    final uiState = context.watch<UIStateProvider>();
 
     return Scaffold(
       floatingActionButton:
