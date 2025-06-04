@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
@@ -116,9 +117,15 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
 
     if (AppSettings.goToNextWhenDeleted.get()) {
       final receipts =
-          await (database.select(
-            database.receipts,
-          )..where((receipt) => receipt.storeId.equals(currentStore.id))).get();
+          await (database.select(database.receipts)..where((receipt) {
+            final isInStore = receipt.storeId.equals(currentStore.id);
+            final isExpiryNull = receipt.expiresAt.isNull();
+            final isNotExpired = receipt.expiresAt.isBiggerOrEqualValue(
+              DateTime.now(),
+            );
+
+            return isInStore & (isExpiryNull | isNotExpired);
+          })).get();
 
       final nextReceipt = receipts.isNotEmpty ? receipts.first : null;
 
