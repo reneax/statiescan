@@ -1,13 +1,14 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
+import 'package:provider/provider.dart';
 import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/screens/receipts/widgets/no_receipts_hint.dart';
 import 'package:statiescan/src/screens/receipts/widgets/receipt_tile/receipt_tile.dart';
 import 'package:statiescan/src/screens/receipts/widgets/store_header.dart';
 import 'package:statiescan/src/screens/receipts/widgets/stores_dropdown.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
-import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
+import 'package:statiescan/src/widgets/screen_wrapper.dart';
 
 class ReceiptsScreen extends StatefulWidget {
   const ReceiptsScreen({super.key});
@@ -17,7 +18,6 @@ class ReceiptsScreen extends StatefulWidget {
 }
 
 class _ReceiptsScreenState extends State<ReceiptsScreen> {
-  final _database = AppDatabase();
   int? _selectedStoreId;
 
   void _handleStorePicked(int? value) {
@@ -27,10 +27,12 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
   }
 
   Stream<Map<Store, List<Receipt>>> watchStoresWithReceipts() {
-    final query = _database.select(_database.stores).join([
+    final database = context.read<AppDatabase>();
+
+    final query = database.select(database.stores).join([
       drift.leftOuterJoin(
-        _database.receipts,
-        _database.receipts.storeId.equalsExp(_database.stores.id),
+        database.receipts,
+        database.receipts.storeId.equalsExp(database.stores.id),
       ),
     ]);
 
@@ -38,8 +40,8 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
       final Map<Store, List<Receipt>> map = {};
 
       for (final row in rows) {
-        final store = row.readTable(_database.stores);
-        final receipt = row.readTableOrNull(_database.receipts);
+        final store = row.readTable(database.stores);
+        final receipt = row.readTableOrNull(database.receipts);
 
         map.putIfAbsent(store, () => []);
 
@@ -62,8 +64,8 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultScreenScaffold(
-      appBar: AppBar(title: const Text("Bonnen")),
+    return ScreenWrapper(
+      appBar: AppBar(title: Text("Bonnen")),
       child: StreamBuilder<Map<Store, List<Receipt>>>(
         stream: watchStoresWithReceipts(),
         builder: (context, snapshot) {

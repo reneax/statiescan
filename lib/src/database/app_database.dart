@@ -8,13 +8,7 @@ part 'app_database.g.dart';
 
 @DriftDatabase(tables: [Receipts, Stores])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase._internal() : super(_openConnection());
-
-  static AppDatabase? _instance;
-
-  factory AppDatabase() {
-    return _instance ??= AppDatabase._internal();
-  }
+  AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
   int get schemaVersion => 1;

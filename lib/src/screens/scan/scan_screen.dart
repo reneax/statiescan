@@ -54,7 +54,6 @@ class _ScanScreenState extends State<ScanScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(title: Text("Bon scannen")),
       body: Stack(
         children: [
           MobileScanner(
