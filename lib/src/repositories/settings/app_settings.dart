@@ -14,6 +14,12 @@ class AppSettings {
     defaultValue: true,
   );
 
+  static const Setting<bool> goToNextWhenDeleted = Setting<bool>(
+    key: 'goToNextWhenDeleted',
+    type: SettingType.bool,
+    defaultValue: false,
+  );
+
   static const Setting<bool> automaticAmountDetection = Setting<bool>(
     key: 'automaticAmountDetection',
     type: SettingType.bool,

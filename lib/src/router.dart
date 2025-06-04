@@ -6,15 +6,38 @@ import 'package:statiescan/src/screens/intro/intro_screen.dart';
 import 'package:statiescan/src/screens/receipts/receipts_screen.dart';
 import 'package:statiescan/src/screens/scan/scan_screen.dart';
 import 'package:statiescan/src/screens/settings/settings_screen.dart';
+import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: AppSettings.isIntroShown.get() ? "/receipts" : "/intro",
-
   routes: [
-    GoRoute(
-      path: '/receipts',
-      pageBuilder:
-          (context, state) => const NoTransitionPage(child: ReceiptsScreen()),
+    ShellRoute(
+      builder: (context, state, child) {
+        return DefaultScreenScaffold(child: child);
+      },
+      routes: [
+        GoRoute(
+          path: '/receipts',
+          pageBuilder:
+              (context, state) =>
+                  const NoTransitionPage(child: ReceiptsScreen()),
+        ),
+        GoRoute(
+          name: 'receiptDetails',
+          path: '/details/:id',
+          builder: (context, state) {
+            final receiptId = int.parse(state.pathParameters['id']!);
+
+            return ReceiptDetailsScreen(receiptId: receiptId);
+          },
+        ),
+        GoRoute(
+          path: '/settings',
+          pageBuilder:
+              (context, state) =>
+                  const NoTransitionPage(child: SettingsScreen()),
+        ),
+      ],
     ),
     GoRoute(
       name: 'createReceipt',
@@ -30,22 +53,6 @@ final GoRouter appRouter = GoRouter(
           ),
         );
       },
-    ),
-    GoRoute(
-      name: 'receiptDetails',
-      path: '/details/:id',
-      pageBuilder: (context, state) {
-        final receiptId = int.parse(state.pathParameters['id']!);
-
-        return NoTransitionPage(
-          child: ReceiptDetailsScreen(receiptId: receiptId),
-        );
-      },
-    ),
-    GoRoute(
-      path: '/settings',
-      pageBuilder:
-          (context, state) => const NoTransitionPage(child: SettingsScreen()),
     ),
     GoRoute(
       path: '/scan',

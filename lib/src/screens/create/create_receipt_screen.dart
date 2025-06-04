@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/create/enums/expiry_time.dart';
@@ -11,7 +12,6 @@ import 'package:statiescan/src/screens/create/widgets/store_dropdown.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
 import 'package:statiescan/src/widgets/barcode_display.dart';
-import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
 
 class CreateReceiptScreen extends StatefulWidget {
   final String barcode;
@@ -28,7 +28,6 @@ class CreateReceiptScreen extends StatefulWidget {
 }
 
 class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
-  final _database = AppDatabase();
   final _formKey = GlobalKey<FormState>();
   final FocusNode _amountFocusNode = FocusNode();
   final TextEditingController _amountController = TextEditingController();
@@ -38,8 +37,8 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   List<Store> _stores = [];
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _isLoading = true;
     _handleAmountField();
     _initializeSavedState();
@@ -96,6 +95,8 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   }
 
   void _handleAddStore() async {
+    final database = context.read<AppDatabase>();
+
     final newStoreName = await showDialog<String>(
       context: context,
       builder: (context) => AddStoreDialog(existingStores: _stores),
@@ -103,8 +104,8 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
 
     if (newStoreName == null || newStoreName.isEmpty) return;
 
-    int newStoreId = await _database
-        .into(_database.stores)
+    int newStoreId = await database
+        .into(database.stores)
         .insert(StoresCompanion.insert(name: newStoreName));
 
     final stores = await _loadStores();
@@ -135,8 +136,10 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
 
     DateTime? expiryDate = currentExpiryTime.getExpiryDate(DateTime.now());
 
-    await _database
-        .into(_database.receipts)
+    final database = context.read<AppDatabase>();
+
+    await database
+        .into(database.receipts)
         .insert(
           ReceiptsCompanion.insert(
             code: widget.barcode,
@@ -147,7 +150,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
         );
 
     if (currentExpiryTime.id != currentStore.lastExpiryTimeId) {
-      await (_database.update(_database.stores)
+      await (database.update(database.stores)
         ..where((tbl) => tbl.id.equals(currentStore.id))).write(
         StoresCompanion(lastExpiryTimeId: drift.Value(currentExpiryTime.id)),
       );
@@ -166,7 +169,9 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   }
 
   Future<List<Store>> _loadStores() {
-    return _database.select(_database.stores).get();
+    final database = context.read<AppDatabase>();
+
+    return database.select(database.stores).get();
   }
 
   Future<(Store?, ExpiryTime?)> _loadLastOptions(List<Store> stores) async {
@@ -191,10 +196,9 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultScreenScaffold(
-      appBar: AppBar(title: const Text("Bon toevoegen")),
-      showNavigation: false,
-      child: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(title: Text("Bon toevoegen")),
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
           child: Form(

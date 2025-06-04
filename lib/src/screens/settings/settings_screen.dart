@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/screens/settings/widgets/sections/about_section.dart';
 import 'package:statiescan/src/screens/settings/widgets/sections/general_section.dart';
 import 'package:statiescan/src/screens/settings/widgets/sections/scanner_section.dart';
-import 'package:statiescan/src/screens/settings/widgets/sections/about_section.dart';
-import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
+import 'package:statiescan/src/widgets/screen_wrapper.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
   @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  @override
   Widget build(BuildContext context) {
-    return DefaultScreenScaffold(
+    return ScreenWrapper(
+      appBar: AppBar(title: Text("Instellingen")),
       child: CustomScrollView(
         slivers: [
-          const SliverAppBar(
-            title: Text("Instellingen"),
-            floating: true,
-            snap: true,
-            forceElevated: true,
-          ),
           SliverList(
             delegate: SliverChildListDelegate([
               GeneralSection(),
