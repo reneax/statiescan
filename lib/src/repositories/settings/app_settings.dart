@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:statiescan/src/repositories/settings/models/setting.dart';
 import 'package:statiescan/src/repositories/settings/models/setting_type.dart';
 
