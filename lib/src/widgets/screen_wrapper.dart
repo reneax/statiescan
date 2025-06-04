@@ -5,15 +5,11 @@ import 'package:statiescan/src/providers/ui_state_provider.dart';
 class ScreenWrapper extends StatefulWidget {
   final Widget? floatingActionButton;
   final PreferredSizeWidget? appBar;
-  final bool hideNavigation;
-  final bool hideActionButton;
   final Widget child;
 
   const ScreenWrapper({
     this.floatingActionButton,
     this.appBar,
-    this.hideNavigation = false,
-    this.hideActionButton = false,
     required this.child,
     super.key,
   });
