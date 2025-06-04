@@ -35,9 +35,7 @@ class _ScreenWrapperState extends State<ScreenWrapper> {
     return Focus(
       autofocus: true,
       onFocusChange: (hasFocus) {
-        if (hasFocus) {
-          _updateUI();
-        }
+        if (hasFocus) _updateUI();
       },
       child: Scaffold(appBar: widget.appBar, body: widget.child),
     );

@@ -12,7 +12,6 @@ import 'package:statiescan/src/screens/create/widgets/store_dropdown.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
 import 'package:statiescan/src/widgets/barcode_display.dart';
-import 'package:statiescan/src/widgets/screen_wrapper.dart';
 
 class CreateReceiptScreen extends StatefulWidget {
   final String barcode;
