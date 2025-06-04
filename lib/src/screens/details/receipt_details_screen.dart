@@ -120,7 +120,7 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
           await (database.select(database.receipts)..where((receipt) {
             final isInStore = receipt.storeId.equals(currentStore.id);
             final isExpiryNull = receipt.expiresAt.isNull();
-            final isNotExpired = receipt.expiresAt.isBiggerOrEqualValue(
+            final isNotExpired = receipt.expiresAt.isBiggerThanValue(
               DateTime.now(),
             );
 
