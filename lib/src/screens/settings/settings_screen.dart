@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:statiescan/src/screens/settings/widgets/sections/about_section.dart';
 import 'package:statiescan/src/screens/settings/widgets/sections/general_section.dart';
 import 'package:statiescan/src/screens/settings/widgets/sections/scanner_section.dart';
+import 'package:statiescan/src/screens/settings/widgets/sections/notification_section.dart';
 import 'package:statiescan/src/widgets/screen_wrapper.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -22,6 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             delegate: SliverChildListDelegate([
               GeneralSection(),
               ScannerSection(),
+              NotificationSection(),
               AboutSection(),
             ]),
           ),

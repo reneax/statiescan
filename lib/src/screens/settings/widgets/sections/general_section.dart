@@ -21,26 +21,9 @@ class _GeneralSectionState extends State<GeneralSection> {
     }
   }
 
-  void _toggleNotifications(bool enabled) {
-    setState(() {
-      AppSettings.notificationsEnabled.set(enabled);
-    });
-  }
-
-  int _notificationDays = AppSettings.notificationDaysBeforeExpiry.get();
-
-  void _updateNotificationDays(int days) {
-    setState(() {
-      _notificationDays = days;
-      AppSettings.notificationDaysBeforeExpiry.set(days);
-      
-    });
-  }
-
   void _toggleGoToNext(bool enabled) {
     setState(() {
       AppSettings.goToNextWhenDeleted.set(enabled);
-
     });
   }
 
@@ -56,29 +39,6 @@ class _GeneralSectionState extends State<GeneralSection> {
           onChanged: _toggleVibration,
         ),
         SwitchListTile(
-          title: const Text("Meldingen ontvangen"),
-          secondary: const Icon(Icons.notifications_active),
-          value: AppSettings.notificationsEnabled.get(),
-          onChanged: _toggleNotifications,
-        ),
-        DropdownButtonFormField<int>(
-          value: _notificationDays,
-          decoration: const InputDecoration(
-            labelText: 'Dagen voor melding bon',
-            prefixIcon: Icon(Icons.event_note),
-          ),
-          items:
-              List.generate(10, (index) => index + 1)
-                  .map(
-                    (day) => DropdownMenuItem(
-                      value: day,
-                      child: Text('$day ${day == 1 ? "dag" : "dagen"}'),
-                    ),
-                  )
-                  .toList(),
-          onChanged: (value) {
-            if (value != null) _updateNotificationDays(value);
-          },
           title: const Text("Volgende bon na verwijderen"),
           subtitle: const Text(
             "Ga na het verwijderen naar de volgende bon van de supermarkt.",

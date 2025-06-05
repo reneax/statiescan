@@ -6,15 +6,18 @@ import 'package:statiescan/src/database/app_database.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
+
   factory NotificationService() => _instance;
 
   final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  late final AppDatabase _database;
+  late AppDatabase _database;
 
-  NotificationService._internal() {
-    _database = AppDatabase();
+  NotificationService._internal();
+
+  void setDatabase(AppDatabase database) {
+    _database = database;
   }
 
   Future<void> cancelNotificationsForReceipt(int receiptId) async {
@@ -40,7 +43,7 @@ class NotificationService {
     await androidImplementation?.requestNotificationsPermission();
   }
 
-  Future<String> _getStoreNameFromDb(int? storeId) async {
+  Future<String?> _getStoreName(int? storeId) async {
     if (storeId == null) {
       return "onbekende winkel";
     }
@@ -49,48 +52,27 @@ class NotificationService {
         await (_database.select(_database.stores)
           ..where((s) => s.id.equals(storeId))).getSingleOrNull();
 
-    if (store != null) {
-      return store.name;
-    } else {
-      return "winkel (ID: $storeId)";
-    }
+    return store?.name;
   }
 
-  Future<void> scheduleReceiptExpiryNotification(Receipt receipt) async {
-    if (!AppSettings.notificationsEnabled.get()) {
+  Future<void> scheduleReceiptExpiryNotification(
+    Receipt receipt,
+    Store store,
+  ) async {
+    if (receipt.expiresAt == null || !AppSettings.notificationsEnabled.get()) {
       return;
     }
 
-    if (receipt.expiresAt == null) {
-      return;
-    }
-
-    final now = DateTime.now();
     final expiry = receipt.expiresAt!;
-
-    if (expiry.isBefore(now)) {
-      return;
-    }
-
-    final String storeName = await _getStoreNameFromDb(receipt.storeId);
-
+    final storeName = await _getStoreName(store.id);
     final int daysBefore = AppSettings.notificationDaysBeforeExpiry.get();
     final Duration daysAdvance = Duration(days: daysBefore);
 
     final DateTime scheduledNotificationDateTime = expiry.subtract(daysAdvance);
-    final tz.TZDateTime receiptReminder;
-
-    if (scheduledNotificationDateTime.isAfter(now)) {
-      receiptReminder = tz.TZDateTime.from(
-        scheduledNotificationDateTime,
-        tz.local,
-      );
-    } else {
-      receiptReminder = tz.TZDateTime.from(
-        now.add(const Duration(seconds: 10)),
-        tz.local,
-      );
-    }
+    final tz.TZDateTime receiptReminder = tz.TZDateTime.from(
+      scheduledNotificationDateTime,
+      tz.local,
+    );
 
     await _notificationsPlugin.zonedSchedule(
       receipt.id,

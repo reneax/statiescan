@@ -25,7 +25,7 @@ class AppSettings {
     type: SettingType.int,
     defaultValue: 3,
   );
-  
+
   static const Setting<bool> goToNextWhenDeleted = Setting<bool>(
     key: 'goToNextWhenDeleted',
     type: SettingType.bool,

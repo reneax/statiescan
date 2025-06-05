@@ -68,41 +68,36 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     return ScreenWrapper(
       appBar: AppBar(title: Text("Bonnen")),
       child: Stack(
-       children: [
-       StreamBuilder<Map<Store, List<Receipt>>>(
-        stream: watchStoresWithReceipts(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
+        children: [
+          StreamBuilder<Map<Store, List<Receipt>>>(
+            stream: watchStoresWithReceipts(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          final stores = snapshot.data!.keys.toList();
-          final filteredStores = Map<Store, List<Receipt>>.from(snapshot.data!)
-            ..removeWhere(
-              (store, receipts) =>
-                  _selectedStoreId != null
-                      ? store.id != _selectedStoreId
-                      : receipts.isEmpty,
-            );
+              final stores = snapshot.data!.keys.toList();
+              final filteredStores = Map<Store, List<Receipt>>.from(
+                snapshot.data!,
+              )..removeWhere(
+                (store, receipts) =>
+                    _selectedStoreId != null
+                        ? store.id != _selectedStoreId
+                        : receipts.isEmpty,
+              );
 
-          if (filteredStores.isEmpty) {
-            return NoReceiptsHint();
-          }
+              if (filteredStores.isEmpty) {
+                return NoReceiptsHint();
+              }
 
-          return CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: StoresDropdown(
-                  stores: stores,
-                  selectedStoreId: _selectedStoreId,
-                  onStoreChosen: _handleStorePicked,
-                ),
-              ),
-              ...filteredStores.entries.map(
-                (entry) => SliverStickyHeader(
-                  header: StoreHeader(
-                    title: entry.key.name,
-                    amount: _getTotalAmountFromReceipts(entry.value),
+              return CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: StoresDropdown(
+                      stores: stores,
+                      selectedStoreId: _selectedStoreId,
+                      onStoreChosen: _handleStorePicked,
+                    ),
                   ),
                   ...filteredStores.entries.map(
                     (entry) => SliverStickyHeader(

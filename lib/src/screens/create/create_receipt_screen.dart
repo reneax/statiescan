@@ -43,6 +43,8 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     _isLoading = true;
     _handleAmountField();
     _initializeSavedState();
+
+    NotificationService().setDatabase(context.read<AppDatabase>());
   }
 
   @override
@@ -139,7 +141,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
 
     final database = context.read<AppDatabase>();
 
-    await database
+    final insertedReceipt = await database
         .into(database.receipts)
         .insertReturning(
           ReceiptsCompanion.insert(
@@ -153,14 +155,17 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
 
     final receipt = Receipt(
       id: insertedReceipt.id,
-      code: widget.barcode,
-      expiresAt: expiryDate,
-      amountInCents: formattedAmount,
-      storeId: currentStore.id,
-      createdAt: DateTime.now(),
+      code: insertedReceipt.code,
+      expiresAt: insertedReceipt.expiresAt,
+      amountInCents: insertedReceipt.amountInCents,
+      storeId: insertedReceipt.storeId,
+      createdAt: insertedReceipt.createdAt,
     );
 
-    await NotificationService().scheduleReceiptExpiryNotification(receipt);
+    await NotificationService().scheduleReceiptExpiryNotification(
+      receipt,
+      currentStore,
+    );
 
     if (currentExpiryTime.id != currentStore.lastExpiryTimeId) {
       await (database.update(database.stores)
