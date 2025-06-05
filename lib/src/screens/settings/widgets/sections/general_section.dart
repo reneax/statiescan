@@ -21,6 +21,12 @@ class _GeneralSectionState extends State<GeneralSection> {
     }
   }
 
+  void _toggleGoToNext(bool enabled) {
+    setState(() {
+      AppSettings.goToNextWhenDeleted.set(enabled);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SettingsSection(
@@ -31,6 +37,15 @@ class _GeneralSectionState extends State<GeneralSection> {
           secondary: const Icon(Icons.vibration),
           value: AppSettings.vibrationEnabled.get(),
           onChanged: _toggleVibration,
+        ),
+        SwitchListTile(
+          title: const Text("Volgende bon na verwijderen"),
+          subtitle: const Text(
+            "Ga na het verwijderen naar de volgende bon van de supermarkt.",
+          ),
+          secondary: const Icon(Icons.double_arrow),
+          value: AppSettings.goToNextWhenDeleted.get(),
+          onChanged: _toggleGoToNext,
         ),
       ],
     );

@@ -33,9 +33,7 @@ class AppNavigationBar extends StatelessWidget {
     String currentLocation,
   ) {
     final destination = tabs[index].location;
-    if (destination != currentLocation) {
-      context.go(destination);
-    }
+    context.go(destination);
   }
 
   @override
