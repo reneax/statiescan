@@ -1,18 +1,21 @@
 import 'dart:io';
 
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
+import 'package:statiescan/src/screens/details/widgets/floating_delete_button.dart';
 import 'package:statiescan/src/screens/details/widgets/information_card/actions_row.dart';
 import 'package:statiescan/src/screens/details/widgets/information_card/information_card.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
 import 'package:statiescan/src/widgets/barcode_display.dart';
-import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
+import 'package:statiescan/src/widgets/screen_wrapper.dart';
 import 'package:vibration/vibration.dart';
 import 'package:statiescan/src/utils/notification_service.dart';
 
@@ -27,24 +30,25 @@ class ReceiptDetailsScreen extends StatefulWidget {
 
 class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
   final ScreenshotController _screenshotController = ScreenshotController();
-  final _database = AppDatabase();
   Receipt? _receipt;
   Store? _store;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _initializeState();
   }
 
   void _initializeState() async {
+    final database = context.read<AppDatabase>();
+
     Receipt fetchedReceipt =
-        await (_database.select(
-          _database.receipts,
+        await (database.select(
+          database.receipts,
         )..where((receipt) => receipt.id.equals(widget.receiptId))).getSingle();
 
     Store fetchedStore =
-        await (_database.select(_database.stores)..where(
+        await (database.select(database.stores)..where(
           (store) => store.id.equals(fetchedReceipt.storeId),
         )).getSingle();
 
@@ -90,10 +94,13 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
 
   void _deleteReceipt() async {
     final currentReceipt = _receipt;
+    final currentStore = _store;
 
-    if (currentReceipt == null) return;
+    if (currentReceipt == null || currentStore == null) return;
 
-    await (_database.delete(_database.receipts)
+    final database = context.read<AppDatabase>();
+
+    await (database.delete(database.receipts)
       ..where((receipt) => receipt.id.equals(currentReceipt.id))).go();
     await NotificationService().cancelNotificationsForReceipt(
       currentReceipt.id,
@@ -111,28 +118,40 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
       message: "De bon is succesvol verwijderd.",
     );
 
+    if (AppSettings.goToNextWhenDeleted.get()) {
+      final receipts =
+          await (database.select(database.receipts)..where((receipt) {
+            final isInStore = receipt.storeId.equals(currentStore.id);
+            final isExpiryNull = receipt.expiresAt.isNull();
+            final isNotExpired = receipt.expiresAt.isBiggerThanValue(
+              DateTime.now(),
+            );
+
+            return isInStore & (isExpiryNull | isNotExpired);
+          })).get();
+
+      final nextReceipt = receipts.isNotEmpty ? receipts.first : null;
+
+      if (!mounted) return;
+
+      if (nextReceipt != null) {
+        context.pushReplacementNamed(
+          "receiptDetails",
+          pathParameters: {"id": nextReceipt.id.toString()},
+        );
+
+        return;
+      }
+    }
+
     context.go("/receipts");
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultScreenScaffold(
-      showAddButton: false,
-      appBar: AppBar(title: const Text("Bon weergeven")),
-      floatingActionButton: GestureDetector(
-        onLongPress: _deleteReceipt,
-        child: FloatingActionButton(
-          backgroundColor: Colors.redAccent,
-          foregroundColor: Colors.white,
-          onPressed:
-              () => SnackbarCreator.show(
-                context,
-                status: SnackbarStatus.info,
-                message: "Houd ingedrukt om te verwijderen.",
-              ),
-          child: const Icon(Icons.delete),
-        ),
-      ),
+    return ScreenWrapper(
+      appBar: AppBar(title: Text("Bon weergeven")),
+      floatingActionButton: FloatingDeleteButton(onDeletePress: _deleteReceipt),
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 20, right: 20),

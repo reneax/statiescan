@@ -13,7 +13,11 @@ class AmountInputField extends StatelessWidget {
   });
 
   bool _isValidInput(value) {
-    return value != null && AmountFormatter.stringToAmount(value) != null;
+    if (value == null) return false;
+
+    final amount = AmountFormatter.stringToAmount(value);
+
+    return amount != null && amount > 0 && amount <= 2147483647;
   }
 
   @override

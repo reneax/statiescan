@@ -42,6 +42,10 @@ class _AddStoreDialogState extends State<AddStoreDialog> {
               return 'Voer een winkelnaam in';
             }
 
+            if (value.length >= 15) {
+              return 'Deze naam is te lang.';
+            }
+
             if (widget.existingStores
                 .map((store) => store.name)
                 .contains(value)) {

@@ -33,6 +33,14 @@ class _GeneralSectionState extends State<GeneralSection> {
     setState(() {
       _notificationDays = days;
       AppSettings.notificationDaysBeforeExpiry.set(days);
+      
+    });
+  }
+
+  void _toggleGoToNext(bool enabled) {
+    setState(() {
+      AppSettings.goToNextWhenDeleted.set(enabled);
+
     });
   }
 
@@ -71,6 +79,13 @@ class _GeneralSectionState extends State<GeneralSection> {
           onChanged: (value) {
             if (value != null) _updateNotificationDays(value);
           },
+          title: const Text("Volgende bon na verwijderen"),
+          subtitle: const Text(
+            "Ga na het verwijderen naar de volgende bon van de supermarkt.",
+          ),
+          secondary: const Icon(Icons.double_arrow),
+          value: AppSettings.goToNextWhenDeleted.get(),
+          onChanged: _toggleGoToNext,
         ),
       ],
     );
