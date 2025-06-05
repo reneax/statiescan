@@ -8,9 +8,9 @@ import 'package:statiescan/src/screens/receipts/widgets/receipt_tile/receipt_til
 import 'package:statiescan/src/screens/receipts/widgets/store_header.dart';
 import 'package:statiescan/src/screens/receipts/widgets/stores_dropdown.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
-import 'package:statiescan/src/widgets/default_screen_scaffold.dart';
 import 'package:statiescan/src/utils/delete_expired_receipts.dart';
 import 'package:statiescan/src/widgets/screen_wrapper.dart';
+import 'package:statiescan/src/repositories/settings/app_settings.dart';
 
 class ReceiptsScreen extends StatefulWidget {
   const ReceiptsScreen({super.key});
@@ -35,7 +35,11 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
   }
 
   Future<void> _deleteExpiredReceipts() async {
-    final cleanupService = DeleteExpiredReceipts(database: _database);
+    if (!AppSettings.deleteOnExpiry.get()) {
+      return;
+    }
+    final database = context.read<AppDatabase>();
+    final cleanupService = DeleteExpiredReceipts(database: database);
     await cleanupService.deleteExpiredReceipts();
     setState(() {});
   }

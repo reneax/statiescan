@@ -20,6 +20,12 @@ class AppSettings {
     defaultValue: false,
   );
 
+  static const Setting<bool> deleteOnExpiry = Setting<bool>(
+    key: 'deleteOnExpiry',
+    type: SettingType.bool,
+    defaultValue: false,
+  );
+
   static const Setting<bool> automaticAmountDetection = Setting<bool>(
     key: 'automaticAmountDetection',
     type: SettingType.bool,
