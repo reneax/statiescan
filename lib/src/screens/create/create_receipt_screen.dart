@@ -136,6 +136,8 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
 
     DateTime? expiryDate = currentExpiryTime.getExpiryDate(DateTime.now());
 
+    expiryDate = expiryDate?.add(Duration(days: 1));
+
     final database = context.read<AppDatabase>();
 
     await database
