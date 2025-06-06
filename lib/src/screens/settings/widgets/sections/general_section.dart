@@ -27,6 +27,12 @@ class _GeneralSectionState extends State<GeneralSection> {
     });
   }
 
+  void _toggleDeleteOnExpiry(bool disabled) {
+    setState(() {
+      AppSettings.deleteOnExpiry.set(disabled);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SettingsSection(
@@ -46,6 +52,15 @@ class _GeneralSectionState extends State<GeneralSection> {
           secondary: const Icon(Icons.double_arrow),
           value: AppSettings.goToNextWhenDeleted.get(),
           onChanged: _toggleGoToNext,
+        ),
+        SwitchListTile(
+          title: const Text("Verlopen bonnen verwijderen"),
+          subtitle: const Text(
+            "Bon automatisch verwijderen als deze verloopt.",
+          ),
+          secondary: const Icon(Icons.auto_delete),
+          value: AppSettings.deleteOnExpiry.get(),
+          onChanged: _toggleDeleteOnExpiry,
         ),
       ],
     );
