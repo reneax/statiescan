@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
-import 'package:statiescan/src/screens/settings/widgets/settings_section.dart';
 import 'package:statiescan/src/screens/settings/widgets/notification_days_popup.dart';
+import 'package:statiescan/src/screens/settings/widgets/settings_section.dart';
 import 'package:statiescan/src/services/notification_service.dart';
 
 class NotificationSection extends StatefulWidget {
@@ -21,7 +21,9 @@ class _GeneralSectionState extends State<NotificationSection> {
         await notificationService.isNotificationsAllowed();
 
     if (!isNotificationsAllowed && enabled) {
-      await notificationService.requestPermission();
+      final isAllowedAfterRequest =
+          await notificationService.requestPermission();
+      enabled = isAllowedAfterRequest ?? false;
     }
 
     if (!mounted) return;

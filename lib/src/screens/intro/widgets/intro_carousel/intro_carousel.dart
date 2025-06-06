@@ -51,7 +51,11 @@ class _IntroCarouselState extends State<IntroCarousel> {
     final isNotificationsAllowed =
         await notificationService.isNotificationsAllowed();
 
-    if (!isNotificationsAllowed) notificationService.requestPermission();
+    if (!isNotificationsAllowed) {
+      notificationService.requestPermission().then((isAllowed) async {
+        AppSettings.notificationsEnabled.set(isAllowed ?? false);
+      });
+    }
   }
 
   @override

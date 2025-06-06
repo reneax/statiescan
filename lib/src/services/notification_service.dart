@@ -42,8 +42,8 @@ class NotificationService {
     await _notificationsPlugin.cancel(receiptId + 100000);
   }
 
-  Future<void> requestPermission() async {
-    await _getAndroidImplementation()?.requestNotificationsPermission();
+  Future<bool?> requestPermission() async {
+    return await _getAndroidImplementation()?.requestNotificationsPermission();
   }
 
   AndroidFlutterLocalNotificationsPlugin? _getAndroidImplementation() {
