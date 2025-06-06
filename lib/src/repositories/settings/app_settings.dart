@@ -14,6 +14,18 @@ class AppSettings {
     defaultValue: true,
   );
 
+  static const Setting<bool> notificationsEnabled = Setting<bool>(
+    key: 'notificationsEnabled',
+    type: SettingType.bool,
+    defaultValue: true,
+  );
+
+  static final notificationDaysBeforeExpiry = Setting<int>(
+    key: 'notificationDaysBeforeExpiry',
+    type: SettingType.int,
+    defaultValue: 3,
+  );
+
   static const Setting<bool> goToNextWhenDeleted = Setting<bool>(
     key: 'goToNextWhenDeleted',
     type: SettingType.bool,
