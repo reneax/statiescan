@@ -21,7 +21,7 @@ class AppSettings {
   );
 
   static final notificationDaysBeforeExpiry = Setting<int>(
-    key: 'notification_days_before_expiry',
+    key: 'notificationDaysBeforeExpiry',
     type: SettingType.int,
     defaultValue: 3,
   );
