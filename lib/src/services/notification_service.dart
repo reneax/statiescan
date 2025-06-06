@@ -1,15 +1,17 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:statiescan/src/repositories/settings/app_settings.dart';
-import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/repositories/settings/app_settings.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   NotificationService() {
-    const androidInit = AndroidInitializationSettings('@drawable/ic_stat_notifications');
+    const androidInit = AndroidInitializationSettings(
+      '@drawable/ic_stat_notifications',
+    );
     const initSettings = InitializationSettings(android: androidInit);
     _notificationsPlugin.initialize(initSettings);
 
