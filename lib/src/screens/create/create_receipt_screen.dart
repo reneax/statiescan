@@ -158,9 +158,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
       );
     }
 
-    if (!mounted) return;
-
-    if (AppSettings.notificationsEnabled.get()) {
+    if (AppSettings.notificationsEnabled.get() && mounted) {
       final notificationService = context.read<NotificationService>();
       final notificationsAllowed =
           await notificationService.isNotificationsAllowed();
@@ -173,14 +171,16 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
       }
     }
 
-    SnackbarCreator.show(
-      context,
-      duration: Duration(seconds: 2),
-      message: "De bon is succesvol opgeslagen.",
-      status: SnackbarStatus.success,
-    );
+    if (mounted) {
+      SnackbarCreator.show(
+        context,
+        duration: Duration(seconds: 2),
+        message: "De bon is succesvol opgeslagen.",
+        status: SnackbarStatus.success,
+      );
 
-    context.go("/receipts");
+      context.go("/receipts");
+    }
   }
 
   Future<List<Store>> _loadStores() {

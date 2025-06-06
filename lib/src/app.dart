@@ -29,7 +29,6 @@ class StatiescanApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         title: 'Statiescan',
-        debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.system,
         routerConfig: appRouter,
         theme: appTheme(Brightness.light),
