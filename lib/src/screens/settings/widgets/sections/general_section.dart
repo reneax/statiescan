@@ -54,7 +54,7 @@ class _GeneralSectionState extends State<GeneralSection> {
           onChanged: _toggleGoToNext,
         ),
         SwitchListTile(
-          title: const Text("Verlopen bonnen verwijderen"),
+          title: const Text("Verlopen bonnen wissen"),
           subtitle: const Text(
             "Bon automatisch verwijderen als deze verloopt.",
           ),
