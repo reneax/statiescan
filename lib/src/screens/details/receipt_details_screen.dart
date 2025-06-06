@@ -12,12 +12,12 @@ import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/details/widgets/floating_delete_button.dart';
 import 'package:statiescan/src/screens/details/widgets/information_card/actions_row.dart';
 import 'package:statiescan/src/screens/details/widgets/information_card/information_card.dart';
+import 'package:statiescan/src/services/notification_service.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
 import 'package:statiescan/src/widgets/barcode_display.dart';
 import 'package:statiescan/src/widgets/screen_wrapper.dart';
 import 'package:vibration/vibration.dart';
-import 'package:statiescan/src/services/notification_service.dart';
 
 class ReceiptDetailsScreen extends StatefulWidget {
   final int receiptId;
@@ -99,12 +99,13 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
     if (currentReceipt == null || currentStore == null) return;
 
     final database = context.read<AppDatabase>();
+    final notificationService = context.read<NotificationService>();
 
     await (database.delete(database.receipts)
       ..where((receipt) => receipt.id.equals(currentReceipt.id))).go();
-    await NotificationService().cancelNotificationsForReceipt(
-      currentReceipt.id,
-    );
+
+    notificationService.cancelNotificationsForReceipt(currentReceipt.id);
+
     if (!mounted) return;
 
     if (AppSettings.vibrationEnabled.get()) {
