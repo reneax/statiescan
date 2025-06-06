@@ -54,11 +54,11 @@ class _GeneralSectionState extends State<GeneralSection> {
           onChanged: _toggleGoToNext,
         ),
         SwitchListTile(
-          title: const Text("automatisch verwijderen"),
+          title: const Text("Verlopen bonnen verwijderen"),
           subtitle: const Text(
             "Bon automatisch verwijderen als deze verloopt.",
           ),
-          secondary: const Icon(Icons.delete),
+          secondary: const Icon(Icons.auto_delete),
           value: AppSettings.deleteOnExpiry.get(),
           onChanged: _toggleDeleteOnExpiry,
         ),

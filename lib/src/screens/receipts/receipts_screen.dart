@@ -8,7 +8,6 @@ import 'package:statiescan/src/screens/receipts/widgets/receipt_tile/receipt_til
 import 'package:statiescan/src/screens/receipts/widgets/store_header.dart';
 import 'package:statiescan/src/screens/receipts/widgets/stores_dropdown.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
-import 'package:statiescan/src/utils/delete_expired_receipts.dart';
 import 'package:statiescan/src/widgets/screen_wrapper.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 
@@ -38,10 +37,21 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     if (!AppSettings.deleteOnExpiry.get()) {
       return;
     }
+
     final database = context.read<AppDatabase>();
-    final cleanupService = DeleteExpiredReceipts(database: database);
-    await cleanupService.deleteExpiredReceipts();
-    setState(() {});
+
+    final now = DateTime.now();
+
+    final expiredReceipts =
+        await (database.select(database.receipts)
+          ..where((r) => r.expiresAt.isSmallerThanValue(now))).get();
+
+    if (expiredReceipts.isEmpty) return;
+
+    final idsToDelete = expiredReceipts.map((r) => r.id).toList();
+
+    await (database.delete(database.receipts)
+      ..where((r) => r.id.isIn(idsToDelete))).go();
   }
 
   Stream<Map<Store, List<Receipt>>> watchStoresWithReceipts() {
