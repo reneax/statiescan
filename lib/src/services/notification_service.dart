@@ -9,7 +9,7 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   NotificationService() {
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidInit = AndroidInitializationSettings('@drawable/ic_stat_notifications');
     const initSettings = InitializationSettings(android: androidInit);
     _notificationsPlugin.initialize(initSettings);
 
@@ -30,8 +30,6 @@ class NotificationService {
           stores.where((store) => store.id == receipt.storeId).firstOrNull;
 
       if (store == null) continue;
-
-      print("Scheduling notification for receipt ${receipt.id}");
 
       await scheduleReceiptExpiryNotification(receipt, store);
     }
