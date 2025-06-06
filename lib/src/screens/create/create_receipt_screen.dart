@@ -12,7 +12,7 @@ import 'package:statiescan/src/screens/create/widgets/store_dropdown.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
 import 'package:statiescan/src/widgets/barcode_display.dart';
-import 'package:statiescan/src/utils/notification_service.dart';
+import 'package:statiescan/src/services/notification_service.dart';
 
 class CreateReceiptScreen extends StatefulWidget {
   final String barcode;
@@ -43,8 +43,6 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
     _isLoading = true;
     _handleAmountField();
     _initializeSavedState();
-
-    NotificationService().setDatabase(context.read<AppDatabase>());
   }
 
   @override
@@ -153,20 +151,6 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
           ),
         );
 
-    final receipt = Receipt(
-      id: insertedReceipt.id,
-      code: insertedReceipt.code,
-      expiresAt: insertedReceipt.expiresAt,
-      amountInCents: insertedReceipt.amountInCents,
-      storeId: insertedReceipt.storeId,
-      createdAt: insertedReceipt.createdAt,
-    );
-
-    await NotificationService().scheduleReceiptExpiryNotification(
-      receipt,
-      currentStore,
-    );
-
     if (currentExpiryTime.id != currentStore.lastExpiryTimeId) {
       await (database.update(database.stores)
         ..where((tbl) => tbl.id.equals(currentStore.id))).write(
@@ -174,16 +158,29 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
       );
     }
 
-    if (mounted) {
-      SnackbarCreator.show(
-        context,
-        duration: Duration(seconds: 2),
-        message: "De bon is succesvol opgeslagen.",
-        status: SnackbarStatus.success,
-      );
+    if (!mounted) return;
 
-      context.go("/receipts");
+    if (AppSettings.notificationsEnabled.get()) {
+      final notificationService = context.read<NotificationService>();
+      final notificationsAllowed =
+          await notificationService.isNotificationsAllowed();
+
+      if (notificationsAllowed) {
+        await notificationService.scheduleReceiptExpiryNotification(
+          insertedReceipt,
+          currentStore,
+        );
+      }
     }
+
+    SnackbarCreator.show(
+      context,
+      duration: Duration(seconds: 2),
+      message: "De bon is succesvol opgeslagen.",
+      status: SnackbarStatus.success,
+    );
+
+    context.go("/receipts");
   }
 
   Future<List<Store>> _loadStores() {

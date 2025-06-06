@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/providers/ui_state_provider.dart';
 import 'package:statiescan/src/router.dart';
+import 'package:statiescan/src/services/notification_service.dart';
 import 'package:statiescan/src/theme.dart';
 import 'package:statiescan/src/utils/image_cache.dart';
 
@@ -18,6 +19,9 @@ class StatiescanApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UIStateProvider()),
+        Provider<NotificationService>(
+          create: (context) => NotificationService(),
+        ),
         Provider<AppDatabase>(
           create: (context) => AppDatabase(),
           dispose: (context, db) => db.close(),

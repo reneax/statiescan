@@ -5,19 +5,36 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:statiescan/src/database/app_database.dart';
 
 class NotificationService {
-  static final NotificationService _instance = NotificationService._internal();
-
-  factory NotificationService() => _instance;
-
   final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  late AppDatabase _database;
+  NotificationService() {
+    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const initSettings = InitializationSettings(android: androidInit);
+    _notificationsPlugin.initialize(initSettings);
 
-  NotificationService._internal();
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('Europe/Amsterdam'));
+  }
 
-  void setDatabase(AppDatabase database) {
-    _database = database;
+  Future<void> cancelAllNotifications() async {
+    await _notificationsPlugin.cancelAll();
+  }
+
+  Future<void> scheduleReceipts(
+    List<Receipt> receipts,
+    List<Store> stores,
+  ) async {
+    for (final receipt in receipts) {
+      final store =
+          stores.where((store) => store.id == receipt.storeId).firstOrNull;
+
+      if (store == null) continue;
+
+      print("Scheduling notification for receipt ${receipt.id}");
+
+      await scheduleReceiptExpiryNotification(receipt, store);
+    }
   }
 
   Future<void> cancelNotificationsForReceipt(int receiptId) async {
@@ -25,52 +42,40 @@ class NotificationService {
     await _notificationsPlugin.cancel(receiptId + 100000);
   }
 
-  Future<void> init() async {
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const initSettings = InitializationSettings(android: androidInit);
-    await _notificationsPlugin.initialize(initSettings);
-
-    tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('Europe/Amsterdam'));
-  }
-
   Future<void> requestPermission() async {
-    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-        _notificationsPlugin
-            .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin
-            >();
-    await androidImplementation?.requestNotificationsPermission();
+    await _getAndroidImplementation()?.requestNotificationsPermission();
   }
 
-  Future<String?> _getStoreName(int? storeId) async {
-    if (storeId == null) {
-      return "onbekende winkel";
-    }
+  AndroidFlutterLocalNotificationsPlugin? _getAndroidImplementation() {
+    return _notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+  }
 
-    final Store? store =
-        await (_database.select(_database.stores)
-          ..where((s) => s.id.equals(storeId))).getSingleOrNull();
-
-    return store?.name;
+  Future<bool> isNotificationsAllowed() async {
+    return await _getAndroidImplementation()?.areNotificationsEnabled() ??
+        false;
   }
 
   Future<void> scheduleReceiptExpiryNotification(
     Receipt receipt,
     Store store,
   ) async {
-    if (receipt.expiresAt == null || !AppSettings.notificationsEnabled.get()) {
+    final expiryDate = receipt.expiresAt;
+
+    if (expiryDate == null) {
       return;
     }
 
-    final expiry = receipt.expiresAt!;
-    final storeName = await _getStoreName(store.id);
+    final storeName = store.name;
     final int daysBefore = AppSettings.notificationDaysBeforeExpiry.get();
-    final Duration daysAdvance = Duration(days: daysBefore);
-
-    final DateTime scheduledNotificationDateTime = expiry.subtract(daysAdvance);
+    final Duration daysBeforeDuration = Duration(days: daysBefore);
+    final DateTime receiptReminderDateTime = expiryDate.subtract(
+      daysBeforeDuration,
+    );
     final tz.TZDateTime receiptReminder = tz.TZDateTime.from(
-      scheduledNotificationDateTime,
+      receiptReminderDateTime,
       tz.local,
     );
 
@@ -82,7 +87,7 @@ class NotificationService {
       const NotificationDetails(
         android: AndroidNotificationDetails(
           'receipt_expiry_channel_soon',
-          'Bon Bijna Vervallen Meldingen',
+          'Bon bijna vervallen',
           channelDescription: 'Meldingen voor bonnen die binnenkort vervallen.',
           importance: Importance.high,
           priority: Priority.high,
@@ -93,7 +98,7 @@ class NotificationService {
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
 
-    final tz.TZDateTime expiryTime = tz.TZDateTime.from(expiry, tz.local);
+    final tz.TZDateTime expiryTime = tz.TZDateTime.from(expiryDate, tz.local);
 
     await _notificationsPlugin.zonedSchedule(
       receipt.id + 100000,
@@ -103,8 +108,8 @@ class NotificationService {
       const NotificationDetails(
         android: AndroidNotificationDetails(
           'receipt_expired_channel_today',
-          'Bon Verlopen Meldingen',
-          channelDescription: 'Meldingen voor bonnen die vandaag vervallen.',
+          'Bon verlopen',
+          channelDescription: 'Meldingen voor bonnen die vandaag verlopen.',
           importance: Importance.defaultImportance,
           priority: Priority.defaultPriority,
           ticker: 'Bon verlopen',

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/settings/widgets/settings_section.dart';
 import 'package:statiescan/src/screens/settings/widgets/notification_days_popup.dart';
+import 'package:statiescan/src/services/notification_service.dart';
 
 class NotificationSection extends StatefulWidget {
   const NotificationSection({super.key});
@@ -11,17 +14,58 @@ class NotificationSection extends StatefulWidget {
 }
 
 class _GeneralSectionState extends State<NotificationSection> {
-  void _toggleNotifications(bool enabled) {
+  void _toggleNotifications(bool enabled) async {
+    final notificationService = context.read<NotificationService>();
+
+    final isNotificationsAllowed =
+        await notificationService.isNotificationsAllowed();
+
+    if (!isNotificationsAllowed && enabled) {
+      await notificationService.requestPermission();
+    }
+
+    if (!mounted) return;
+
+    if (enabled) {
+      _rescheduleNotifications(notificationService);
+    } else {
+      _cancelNotifications(notificationService);
+    }
+
     setState(() {
       AppSettings.notificationsEnabled.set(enabled);
     });
   }
 
-  int _notificationDays = AppSettings.notificationDaysBeforeExpiry.get();
+  Future<void> _rescheduleNotifications(
+    NotificationService notificationService,
+  ) async {
+    final database = context.read<AppDatabase>();
 
-  void _updateNotificationDays(int days) {
+    final receipts = await database.select(database.receipts).get();
+    final stores = await database.select(database.stores).get();
+
+    await notificationService.scheduleReceipts(receipts, stores);
+  }
+
+  Future<void> _cancelNotifications(
+    NotificationService notificationService,
+  ) async {
+    await notificationService.cancelAllNotifications();
+  }
+
+  void _updateNotificationDays(int days) async {
+    final notificationService = context.read<NotificationService>();
+
+    final isNotificationsAllowed =
+        await notificationService.isNotificationsAllowed();
+
+    if (AppSettings.notificationsEnabled.get() && isNotificationsAllowed) {
+      await _cancelNotifications(notificationService);
+      await _rescheduleNotifications(notificationService);
+    }
+
     setState(() {
-      _notificationDays = days;
       AppSettings.notificationDaysBeforeExpiry.set(days);
     });
   }
@@ -29,7 +73,7 @@ class _GeneralSectionState extends State<NotificationSection> {
   Future<void> _showNotificationDaysPopup() async {
     final int? selectedDay = await showNotificationDaysPopup(
       context,
-      _notificationDays,
+      AppSettings.notificationDaysBeforeExpiry.get(),
     );
     if (selectedDay != null) {
       _updateNotificationDays(selectedDay);
@@ -49,8 +93,9 @@ class _GeneralSectionState extends State<NotificationSection> {
         ),
         ListTile(
           leading: const Icon(Icons.calendar_month_outlined),
-          title: Text(
-            'Dagen voor melding bon: $_notificationDays ${_notificationDays == 1 ? "dag" : "dagen"}',
+          title: Text('Aantal dagen voor bonverval melding'),
+          subtitle: Text(
+            "Stel in hoeveel dagen van tevoren je een melding wilt over het verlopen van je bon.",
           ),
           onTap: _showNotificationDaysPopup,
         ),

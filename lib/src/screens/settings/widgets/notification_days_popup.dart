@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Future<int?> showNotificationDaysPopup(
   BuildContext context,
-  int currentDay,
+  int selectedDay,
 ) async {
   return showDialog<int>(
     context: context,
@@ -15,7 +15,7 @@ Future<int?> showNotificationDaysPopup(
               List.generate(3, (index) => index + 1).map((day) {
                 return ListTile(
                   title: Text('$day ${day == 1 ? "dag" : "dagen"}'),
-                  selected: day == currentDay,
+                  selected: day == selectedDay,
                   onTap: () {
                     Navigator.of(context).pop(day);
                   },
