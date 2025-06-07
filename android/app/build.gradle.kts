@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.konan.properties.hasProperty
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -50,15 +51,15 @@ android {
 
     signingConfigs {
         create("release") {
-            if (project.hasProperty("keyAlias") &&
-                project.hasProperty("keyPassword") &&
-                project.hasProperty("storeFile") &&
-                project.hasProperty("storePassword")
+            if (keystoreProperties.hasProperty("keyAlias") &&
+                keystoreProperties.hasProperty("keyPassword") &&
+                keystoreProperties.hasProperty("storeFile") &&
+                keystoreProperties.hasProperty("storePassword")
             ) {
-                keyAlias = project.property("keyAlias") as String
-                keyPassword = project.property("keyPassword") as String
-                storeFile = file(project.property("storeFile") as String)
-                storePassword = project.property("storePassword") as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+                storePassword = keystoreProperties["storePassword"] as String
             }
         }
     }
