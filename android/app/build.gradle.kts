@@ -50,16 +50,28 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String
+            if (project.hasProperty("keyAlias") &&
+                project.hasProperty("keyPassword") &&
+                project.hasProperty("storeFile") &&
+                project.hasProperty("storePassword")
+            ) {
+                keyAlias = project.property("keyAlias") as String
+                keyPassword = project.property("keyPassword") as String
+                storeFile = file(project.property("storeFile") as String)
+                storePassword = project.property("storePassword") as String
+            }
         }
     }
 
     buildTypes {
-        release {
-            signingConfig = signingConfigs.getByName("release")
+        getByName("release") {
+            val signingConfig = signingConfigs.findByName("release")
+
+            if (signingConfig?.keyAlias != null) {
+                this.signingConfig = signingConfig
+            } else {
+                println("No signing properties provided. Build will be unsigned.")
+            }
         }
     }
 }
