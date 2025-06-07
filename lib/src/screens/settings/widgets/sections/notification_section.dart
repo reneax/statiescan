@@ -5,6 +5,7 @@ import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/settings/widgets/notification_days_popup.dart';
 import 'package:statiescan/src/screens/settings/widgets/settings_section.dart';
 import 'package:statiescan/src/services/notification_service.dart';
+import 'package:statiescan/src/utils/snackbar_creator.dart';
 
 class NotificationSection extends StatefulWidget {
   const NotificationSection({super.key});
@@ -23,7 +24,18 @@ class _GeneralSectionState extends State<NotificationSection> {
     if (!isNotificationsAllowed && enabled) {
       final isAllowedAfterRequest =
           await notificationService.requestPermission();
+
       enabled = isAllowedAfterRequest ?? false;
+
+      if (!enabled && mounted) {
+        SnackbarCreator.show(
+          context,
+          message:
+              "Kon geen permissie verkrijgen. Geef de app notificatie permissies via instellingen.",
+          status: SnackbarStatus.error,
+          duration: Duration(seconds: 5),
+        );
+      }
     }
 
     if (!mounted) return;
