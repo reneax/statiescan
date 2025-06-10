@@ -1,11 +1,27 @@
-# Statiescan
+## Statiescan
 
-Scan jouw statiegeld bonnen en sla ze gemakkelijk op met deze app.
+Dit is een beheer app voor jouw statiegeld bonnen.
 
-## Building
-1. Generate drift code: `dart run build_runner build`
-2. Build to APK: `flutter build apk`
+<a href="https://play.google.com/store/apps/details?id=nl.reneax.statiescan" target="_blank">
+  <img src="assets/readme/google_play.svg" alt="Ga naar de app op Google Play" width="200"/>
+</a>
 
-## Development
-1. Watch and generate drift code: `dart run build_runner watch`
-2. Run app on platform: `flutter run <platform>`
+### Waarom?
+
+Statiegeld bonnen komen in ons leven vaak voorbij, maar er is één probleem.
+Het statiegeld wordt vrijgegeven door middel van bonnetjes die kwijtraken of gaan vervagen.<br>
+
+De Statiescan app lost deze problemen op door de bonnen te digitaliseren.
+
+### Build naar APK
+
+1. Clone deze Github repository.
+2. Installeer Flutter en Android Studio.
+3. Gebruik `flutter pub get` om de benodigde packages te installeren.
+4. Doe `dart run build_runner build` om de database code opnieuw te genereren.
+5. Maak gebruik van `flutter build apk` om de app te builden.
+
+### Contributors
+
+- Joey1408
+- reneax
