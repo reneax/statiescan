@@ -8,7 +8,7 @@ Dit is een beheer app voor jouw statiegeld bonnen.
 
 ### Waarom?
 
-Statiegeld bonnen komen in ons leven vaak voorbij, maar er is één probleem.
+Statiegeld bonnen komen in ons leven vaak voorbij, maar er is één probleem.<br>
 Het statiegeld wordt vrijgegeven door middel van bonnetjes die kwijtraken of gaan vervagen.<br>
 
 De Statiescan app lost deze problemen op door de bonnen te digitaliseren.
