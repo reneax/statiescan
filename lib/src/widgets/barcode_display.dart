@@ -21,7 +21,7 @@ class BarcodeDisplay extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Center(
           child: BarcodeWidget(
-            barcode: Barcode.ean13(),
+            barcode: Barcode.gs128(),
             style: TextStyle(color: Colors.black),
             color: Colors.black,
             data: barcode,

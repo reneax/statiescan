@@ -11,7 +11,7 @@ class ReceiptBarcode extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BarcodeWidget(
-      barcode: Barcode.ean13(),
+      barcode: Barcode.code128(),
       data: code,
       width: 80,
       height: 40,

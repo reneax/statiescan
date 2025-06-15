@@ -19,9 +19,9 @@ class _ScanScreenState extends State<ScanScreen> {
 
   void _onBarcodeDetect(BarcodeCapture capture) async {
     Barcode barcode = capture.barcodes.first;
-    String? rawValue = barcode.rawValue;
+    String? barcodeValue = barcode.displayValue ?? barcode.rawValue;
 
-    if (rawValue == null) return;
+    if (barcodeValue == null) return;
 
     int? amountInCents;
     final capturedImage = capture.image;
@@ -44,7 +44,7 @@ class _ScanScreenState extends State<ScanScreen> {
     context.pushReplacementNamed(
       'createReceipt',
       queryParameters: {
-        'barcode': rawValue,
+        'barcode': barcodeValue,
         'amount': amountInCents.toString(),
       },
     );
@@ -59,7 +59,6 @@ class _ScanScreenState extends State<ScanScreen> {
         children: [
           MobileScanner(
             controller: MobileScannerController(
-              formats: [BarcodeFormat.ean13],
               detectionSpeed: DetectionSpeed.noDuplicates,
               returnImage: AppSettings.automaticAmountDetection.get(),
             ),
