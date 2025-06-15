@@ -20,6 +20,7 @@ class _ScanScreenState extends State<ScanScreen> {
   void _onBarcodeDetect(BarcodeCapture capture) async {
     Barcode barcode = capture.barcodes.first;
     String? barcodeValue = barcode.displayValue ?? barcode.rawValue;
+    int barcodeType = barcode.format.rawValue;
 
     if (barcodeValue == null) return;
 
@@ -46,6 +47,7 @@ class _ScanScreenState extends State<ScanScreen> {
       queryParameters: {
         'barcode': barcodeValue,
         'amount': amountInCents.toString(),
+        'type': barcodeType.toString(),
       },
     );
   }

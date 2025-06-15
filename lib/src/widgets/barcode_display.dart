@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 class BarcodeDisplay extends StatelessWidget {
   final double height, width;
   final String barcode;
+  final BarcodeType type;
 
   const BarcodeDisplay({
     super.key,
     required this.barcode,
+    required this.type,
     this.height = 100,
     this.width = 200,
   });
@@ -21,7 +23,7 @@ class BarcodeDisplay extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Center(
           child: BarcodeWidget(
-            barcode: Barcode.gs128(),
+            barcode: Barcode.fromType(type),
             style: TextStyle(color: Colors.black),
             color: Colors.black,
             data: barcode,

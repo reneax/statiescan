@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:statiescan/src/utils/date_utilities.dart';
+import 'package:statiescan/src/utils/convert_utils.dart';
 
 class ReceiptDetails extends StatelessWidget {
   final DateTime? expiresAt;
@@ -29,7 +29,7 @@ class ReceiptDetails extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 6),
             child: Text(
-              DateUtilities.getExpiryText(expiresAt, true),
+              ConvertUtils.getExpiryText(expiresAt, true),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withAlpha(150),
               ),

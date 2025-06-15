@@ -44,12 +44,14 @@ final GoRouter appRouter = GoRouter(
       path: '/create',
       pageBuilder: (context, state) {
         final barcode = state.uri.queryParameters['barcode']!;
+        final typeId = state.uri.queryParameters['type']!;
         final amount = state.uri.queryParameters['amount'];
 
         return NoTransitionPage(
           child: CreateReceiptScreen(
             barcode: barcode,
             amountInCents: amount != null ? int.tryParse(amount) : null,
+            typeId: int.parse(typeId),
           ),
         );
       },
