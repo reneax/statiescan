@@ -26,6 +26,7 @@ class AppDatabase extends _$AppDatabase {
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
+      onCreate: (m) => m.createAll(),
       onUpgrade: stepByStep(
         from1To2: (m, schema) async {
           await m.addColumn(schema.receipts, schema.receipts.typeId);
