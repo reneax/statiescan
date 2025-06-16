@@ -14,5 +14,5 @@ class Receipts extends Table {
 
   IntColumn get storeId => integer().references(Stores, #id)();
 
-  IntColumn get typeId => integer()();
+  IntColumn get typeId => integer().withDefault(const Constant(32))();
 }
