@@ -14,6 +14,7 @@ import 'package:statiescan/src/screens/details/widgets/information_card/actions_
 import 'package:statiescan/src/screens/details/widgets/information_card/information_card.dart';
 import 'package:statiescan/src/services/notification_service.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
+import 'package:statiescan/src/utils/convert_utils.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
 import 'package:statiescan/src/widgets/barcode_display.dart';
 import 'package:statiescan/src/widgets/screen_wrapper.dart';
@@ -65,7 +66,12 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
     if (currentReceipt == null || currentStore == null) return;
 
     final imageBytes = await _screenshotController.captureFromWidget(
-      BarcodeDisplay(barcode: _receipt!.code, height: 150, width: 300),
+      BarcodeDisplay(
+        barcode: currentReceipt.code,
+        type: ConvertUtils.getBarcodeType(currentReceipt.typeId),
+        height: 150,
+        width: 300,
+      ),
       delay: Duration.zero,
     );
 
@@ -171,6 +177,7 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
                 children: [
                   BarcodeDisplay(
                     barcode: currentReceipt.code,
+                    type: ConvertUtils.getBarcodeType(currentReceipt.typeId),
                     height: 150,
                     width: 300,
                   ),

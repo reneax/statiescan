@@ -4,6 +4,7 @@ import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/screens/receipts/widgets/receipt_tile/widgets/barcode_widget.dart';
 import 'package:statiescan/src/screens/receipts/widgets/receipt_tile/widgets/receipt_details.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
+import 'package:statiescan/src/utils/convert_utils.dart';
 
 class ReceiptTile extends StatelessWidget {
   final Receipt receipt;
@@ -32,7 +33,10 @@ class ReceiptTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               spacing: 20,
               children: [
-                ReceiptBarcode(code: receipt.code),
+                ReceiptBarcode(
+                  code: receipt.code,
+                  type: ConvertUtils.getBarcodeType(receipt.typeId),
+                ),
                 ReceiptDetails(
                   amountString: AmountFormatter.amountToString(
                     receipt.amountInCents,

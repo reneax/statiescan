@@ -9,19 +9,22 @@ import 'package:statiescan/src/screens/create/widgets/add_store_dialog.dart';
 import 'package:statiescan/src/screens/create/widgets/amount_input_field.dart';
 import 'package:statiescan/src/screens/create/widgets/expiry_time_dropdown.dart';
 import 'package:statiescan/src/screens/create/widgets/store_dropdown.dart';
+import 'package:statiescan/src/services/notification_service.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
+import 'package:statiescan/src/utils/convert_utils.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
 import 'package:statiescan/src/widgets/barcode_display.dart';
-import 'package:statiescan/src/services/notification_service.dart';
 
 class CreateReceiptScreen extends StatefulWidget {
   final String barcode;
   final int? amountInCents;
+  final int typeId;
 
   const CreateReceiptScreen({
     super.key,
     required this.barcode,
     required this.amountInCents,
+    required this.typeId,
   });
 
   @override
@@ -146,6 +149,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
         .insertReturning(
           ReceiptsCompanion.insert(
             code: widget.barcode,
+            typeId: drift.Value(widget.typeId),
             expiresAt: drift.Value(expiryDate),
             amountInCents: formattedAmount,
             storeId: currentStore.id,
@@ -224,7 +228,10 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
               spacing: 20,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BarcodeDisplay(barcode: widget.barcode),
+                BarcodeDisplay(
+                  barcode: widget.barcode,
+                  type: ConvertUtils.getBarcodeType(widget.typeId),
+                ),
                 AmountInputField(
                   editingController: _amountController,
                   focusNode: _amountFocusNode,

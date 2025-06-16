@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/screens/details/widgets/information_card/widgets/icon_text.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
-import 'package:statiescan/src/utils/date_utilities.dart';
+import 'package:statiescan/src/utils/convert_utils.dart';
 
 class ReceiptInformationCard extends StatelessWidget {
   final Receipt receipt;
@@ -31,7 +31,7 @@ class ReceiptInformationCard extends StatelessWidget {
             ),
             IconText(
               iconData: Icons.access_time,
-              text: DateUtilities.getExpiryText(receipt.expiresAt, false),
+              text: ConvertUtils.getExpiryText(receipt.expiresAt, false),
             ),
           ],
         ),
