@@ -5,7 +5,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 class ConvertUtils {
   static final Map<BarcodeFormat, barcode_widget.BarcodeType>
   _barcodeFormatMap = {
-    BarcodeFormat.code128: barcode_widget.BarcodeType.Code128,
+    BarcodeFormat.code128: barcode_widget.BarcodeType.GS128,
     BarcodeFormat.code39: barcode_widget.BarcodeType.Code39,
     BarcodeFormat.code93: barcode_widget.BarcodeType.Code93,
     BarcodeFormat.codabar: barcode_widget.BarcodeType.Codabar,

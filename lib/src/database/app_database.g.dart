@@ -345,7 +345,8 @@ class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
     aliasedName,
     false,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(32),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -416,8 +417,6 @@ class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
         _typeIdMeta,
         typeId.isAcceptableOrUnknown(data['type_id']!, _typeIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_typeIdMeta);
     }
     return context;
   }
@@ -640,11 +639,10 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
     this.createdAt = const Value.absent(),
     this.expiresAt = const Value.absent(),
     required int storeId,
-    required int typeId,
+    this.typeId = const Value.absent(),
   }) : code = Value(code),
        amountInCents = Value(amountInCents),
-       storeId = Value(storeId),
-       typeId = Value(typeId);
+       storeId = Value(storeId);
   static Insertable<Receipt> custom({
     Expression<int>? id,
     Expression<String>? code,
@@ -1008,7 +1006,7 @@ typedef $$ReceiptsTableCreateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime?> expiresAt,
       required int storeId,
-      required int typeId,
+      Value<int> typeId,
     });
 typedef $$ReceiptsTableUpdateCompanionBuilder =
     ReceiptsCompanion Function({
@@ -1275,7 +1273,7 @@ class $$ReceiptsTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> expiresAt = const Value.absent(),
                 required int storeId,
-                required int typeId,
+                Value<int> typeId = const Value.absent(),
               }) => ReceiptsCompanion.insert(
                 id: id,
                 code: code,

@@ -149,7 +149,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
         .insertReturning(
           ReceiptsCompanion.insert(
             code: widget.barcode,
-            typeId: widget.typeId,
+            typeId: drift.Value(widget.typeId),
             expiresAt: drift.Value(expiryDate),
             amountInCents: formattedAmount,
             storeId: currentStore.id,
