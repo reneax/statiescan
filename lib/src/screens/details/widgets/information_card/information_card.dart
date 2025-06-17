@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:statiescan/src/database/app_database.dart';
-import 'package:statiescan/src/screens/details/widgets/information_card/widgets/icon_text.dart';
+import 'package:statiescan/src/widgets/icon_text.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/utils/convert_utils.dart';
 
