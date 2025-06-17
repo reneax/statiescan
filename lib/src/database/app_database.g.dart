@@ -324,6 +324,17 @@ class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _storeIdMeta = const VerificationMeta(
     'storeId',
   );
@@ -355,6 +366,7 @@ class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
     amountInCents,
     createdAt,
     expiresAt,
+    deletedAt,
     storeId,
     typeId,
   ];
@@ -404,6 +416,12 @@ class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
         expiresAt.isAcceptableOrUnknown(data['expires_at']!, _expiresAtMeta),
       );
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     if (data.containsKey('store_id')) {
       context.handle(
         _storeIdMeta,
@@ -451,6 +469,10 @@ class $ReceiptsTable extends Receipts with TableInfo<$ReceiptsTable, Receipt> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}expires_at'],
       ),
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
       storeId:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
@@ -476,6 +498,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
   final int amountInCents;
   final DateTime createdAt;
   final DateTime? expiresAt;
+  final DateTime? deletedAt;
   final int storeId;
   final int typeId;
   const Receipt({
@@ -484,6 +507,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
     required this.amountInCents,
     required this.createdAt,
     this.expiresAt,
+    this.deletedAt,
     required this.storeId,
     required this.typeId,
   });
@@ -496,6 +520,9 @@ class Receipt extends DataClass implements Insertable<Receipt> {
     map['created_at'] = Variable<DateTime>(createdAt);
     if (!nullToAbsent || expiresAt != null) {
       map['expires_at'] = Variable<DateTime>(expiresAt);
+    }
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
     }
     map['store_id'] = Variable<int>(storeId);
     map['type_id'] = Variable<int>(typeId);
@@ -512,6 +539,10 @@ class Receipt extends DataClass implements Insertable<Receipt> {
           expiresAt == null && nullToAbsent
               ? const Value.absent()
               : Value(expiresAt),
+      deletedAt:
+          deletedAt == null && nullToAbsent
+              ? const Value.absent()
+              : Value(deletedAt),
       storeId: Value(storeId),
       typeId: Value(typeId),
     );
@@ -528,6 +559,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
       amountInCents: serializer.fromJson<int>(json['amountInCents']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       expiresAt: serializer.fromJson<DateTime?>(json['expiresAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       storeId: serializer.fromJson<int>(json['storeId']),
       typeId: serializer.fromJson<int>(json['typeId']),
     );
@@ -541,6 +573,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
       'amountInCents': serializer.toJson<int>(amountInCents),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'expiresAt': serializer.toJson<DateTime?>(expiresAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'storeId': serializer.toJson<int>(storeId),
       'typeId': serializer.toJson<int>(typeId),
     };
@@ -552,6 +585,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
     int? amountInCents,
     DateTime? createdAt,
     Value<DateTime?> expiresAt = const Value.absent(),
+    Value<DateTime?> deletedAt = const Value.absent(),
     int? storeId,
     int? typeId,
   }) => Receipt(
@@ -560,6 +594,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
     amountInCents: amountInCents ?? this.amountInCents,
     createdAt: createdAt ?? this.createdAt,
     expiresAt: expiresAt.present ? expiresAt.value : this.expiresAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
     storeId: storeId ?? this.storeId,
     typeId: typeId ?? this.typeId,
   );
@@ -573,6 +608,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
               : this.amountInCents,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       expiresAt: data.expiresAt.present ? data.expiresAt.value : this.expiresAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
       storeId: data.storeId.present ? data.storeId.value : this.storeId,
       typeId: data.typeId.present ? data.typeId.value : this.typeId,
     );
@@ -586,6 +622,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
           ..write('amountInCents: $amountInCents, ')
           ..write('createdAt: $createdAt, ')
           ..write('expiresAt: $expiresAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('storeId: $storeId, ')
           ..write('typeId: $typeId')
           ..write(')'))
@@ -599,6 +636,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
     amountInCents,
     createdAt,
     expiresAt,
+    deletedAt,
     storeId,
     typeId,
   );
@@ -611,6 +649,7 @@ class Receipt extends DataClass implements Insertable<Receipt> {
           other.amountInCents == this.amountInCents &&
           other.createdAt == this.createdAt &&
           other.expiresAt == this.expiresAt &&
+          other.deletedAt == this.deletedAt &&
           other.storeId == this.storeId &&
           other.typeId == this.typeId);
 }
@@ -621,6 +660,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
   final Value<int> amountInCents;
   final Value<DateTime> createdAt;
   final Value<DateTime?> expiresAt;
+  final Value<DateTime?> deletedAt;
   final Value<int> storeId;
   final Value<int> typeId;
   const ReceiptsCompanion({
@@ -629,6 +669,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
     this.amountInCents = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.expiresAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.storeId = const Value.absent(),
     this.typeId = const Value.absent(),
   });
@@ -638,6 +679,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
     required int amountInCents,
     this.createdAt = const Value.absent(),
     this.expiresAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     required int storeId,
     this.typeId = const Value.absent(),
   }) : code = Value(code),
@@ -649,6 +691,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
     Expression<int>? amountInCents,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? expiresAt,
+    Expression<DateTime>? deletedAt,
     Expression<int>? storeId,
     Expression<int>? typeId,
   }) {
@@ -658,6 +701,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
       if (amountInCents != null) 'amount_in_cents': amountInCents,
       if (createdAt != null) 'created_at': createdAt,
       if (expiresAt != null) 'expires_at': expiresAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (storeId != null) 'store_id': storeId,
       if (typeId != null) 'type_id': typeId,
     });
@@ -669,6 +713,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
     Value<int>? amountInCents,
     Value<DateTime>? createdAt,
     Value<DateTime?>? expiresAt,
+    Value<DateTime?>? deletedAt,
     Value<int>? storeId,
     Value<int>? typeId,
   }) {
@@ -678,6 +723,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
       amountInCents: amountInCents ?? this.amountInCents,
       createdAt: createdAt ?? this.createdAt,
       expiresAt: expiresAt ?? this.expiresAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       storeId: storeId ?? this.storeId,
       typeId: typeId ?? this.typeId,
     );
@@ -701,6 +747,9 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
     if (expiresAt.present) {
       map['expires_at'] = Variable<DateTime>(expiresAt.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (storeId.present) {
       map['store_id'] = Variable<int>(storeId.value);
     }
@@ -718,6 +767,7 @@ class ReceiptsCompanion extends UpdateCompanion<Receipt> {
           ..write('amountInCents: $amountInCents, ')
           ..write('createdAt: $createdAt, ')
           ..write('expiresAt: $expiresAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('storeId: $storeId, ')
           ..write('typeId: $typeId')
           ..write(')'))
@@ -1005,6 +1055,7 @@ typedef $$ReceiptsTableCreateCompanionBuilder =
       required int amountInCents,
       Value<DateTime> createdAt,
       Value<DateTime?> expiresAt,
+      Value<DateTime?> deletedAt,
       required int storeId,
       Value<int> typeId,
     });
@@ -1015,6 +1066,7 @@ typedef $$ReceiptsTableUpdateCompanionBuilder =
       Value<int> amountInCents,
       Value<DateTime> createdAt,
       Value<DateTime?> expiresAt,
+      Value<DateTime?> deletedAt,
       Value<int> storeId,
       Value<int> typeId,
     });
@@ -1073,6 +1125,11 @@ class $$ReceiptsTableFilterComposer
 
   ColumnFilters<DateTime> get expiresAt => $composableBuilder(
     column: $table.expiresAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1139,6 +1196,11 @@ class $$ReceiptsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get typeId => $composableBuilder(
     column: $table.typeId,
     builder: (column) => ColumnOrderings(column),
@@ -1193,6 +1255,9 @@ class $$ReceiptsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get expiresAt =>
       $composableBuilder(column: $table.expiresAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   GeneratedColumn<int> get typeId =>
       $composableBuilder(column: $table.typeId, builder: (column) => column);
@@ -1254,6 +1319,7 @@ class $$ReceiptsTableTableManager
                 Value<int> amountInCents = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> expiresAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> storeId = const Value.absent(),
                 Value<int> typeId = const Value.absent(),
               }) => ReceiptsCompanion(
@@ -1262,6 +1328,7 @@ class $$ReceiptsTableTableManager
                 amountInCents: amountInCents,
                 createdAt: createdAt,
                 expiresAt: expiresAt,
+                deletedAt: deletedAt,
                 storeId: storeId,
                 typeId: typeId,
               ),
@@ -1272,6 +1339,7 @@ class $$ReceiptsTableTableManager
                 required int amountInCents,
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> expiresAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 required int storeId,
                 Value<int> typeId = const Value.absent(),
               }) => ReceiptsCompanion.insert(
@@ -1280,6 +1348,7 @@ class $$ReceiptsTableTableManager
                 amountInCents: amountInCents,
                 createdAt: createdAt,
                 expiresAt: expiresAt,
+                deletedAt: deletedAt,
                 storeId: storeId,
                 typeId: typeId,
               ),

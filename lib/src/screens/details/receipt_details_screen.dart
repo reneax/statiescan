@@ -107,8 +107,9 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
     final database = context.read<AppDatabase>();
     final notificationService = context.read<NotificationService>();
 
-    await (database.delete(database.receipts)
-      ..where((receipt) => receipt.id.equals(currentReceipt.id))).go();
+    await (database.update(database.receipts)..where(
+      (receipt) => receipt.id.equals(currentReceipt.id),
+    )).write(ReceiptsCompanion(deletedAt: drift.Value(DateTime.now())));
 
     notificationService.cancelNotificationsForReceipt(currentReceipt.id);
 
@@ -129,12 +130,13 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
       final receipts =
           await (database.select(database.receipts)..where((receipt) {
             final isInStore = receipt.storeId.equals(currentStore.id);
+            final isNotDeleted = receipt.deletedAt.isNull();
             final isExpiryNull = receipt.expiresAt.isNull();
             final isNotExpired = receipt.expiresAt.isBiggerThanValue(
               DateTime.now(),
             );
 
-            return isInStore & (isExpiryNull | isNotExpired);
+            return isInStore & isNotDeleted & (isExpiryNull | isNotExpired);
           })).get();
 
       final nextReceipt = receipts.isNotEmpty ? receipts.first : null;
