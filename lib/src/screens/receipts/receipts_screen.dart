@@ -62,25 +62,26 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     final query = database.select(database.stores).join([
       drift.leftOuterJoin(
         database.receipts,
-        database.receipts.storeId.equalsExp(database.stores.id),
+        database.receipts.storeId.equalsExp(database.stores.id) &
+            database.receipts.deletedAt.isNull(),
       ),
     ]);
 
     return query.watch().map((rows) {
-      final Map<Store, List<Receipt>> map = {};
+      final Map<Store, List<Receipt>> storeToReceipts = {};
 
       for (final row in rows) {
         final store = row.readTable(database.stores);
         final receipt = row.readTableOrNull(database.receipts);
 
-        map.putIfAbsent(store, () => []);
+        storeToReceipts.putIfAbsent(store, () => []);
 
-        if (receipt != null && receipt.deletedAt == null) {
-          map[store]?.add(receipt);
+        if (receipt != null) {
+          storeToReceipts[store]!.add(receipt);
         }
       }
 
-      return map;
+      return storeToReceipts;
     });
   }
 
