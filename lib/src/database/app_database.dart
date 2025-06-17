@@ -12,7 +12,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
@@ -30,6 +30,9 @@ class AppDatabase extends _$AppDatabase {
       onUpgrade: stepByStep(
         from1To2: (m, schema) async {
           await m.addColumn(schema.receipts, schema.receipts.typeId);
+        },
+        from2To3: (m, schema) async {
+          await m.addColumn(schema.receipts, schema.receipts.deletedAt);
         },
       ),
     );

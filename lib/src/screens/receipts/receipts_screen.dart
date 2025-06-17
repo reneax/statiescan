@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:provider/provider.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/receipts/widgets/no_receipts_hint.dart';
 import 'package:statiescan/src/screens/receipts/widgets/receipt_tile/receipt_tile.dart';
 import 'package:statiescan/src/screens/receipts/widgets/store_header.dart';
 import 'package:statiescan/src/screens/receipts/widgets/stores_dropdown.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/widgets/screen_wrapper.dart';
-import 'package:statiescan/src/repositories/settings/app_settings.dart';
 
 class ReceiptsScreen extends StatefulWidget {
   const ReceiptsScreen({super.key});
@@ -43,15 +43,17 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     final now = DateTime.now();
 
     final expiredReceipts =
-        await (database.select(database.receipts)
-          ..where((r) => r.expiresAt.isSmallerThanValue(now))).get();
+        await (database.select(database.receipts)..where(
+          (r) => r.deletedAt.isNull() & r.expiresAt.isSmallerThanValue(now),
+        )).get();
 
     if (expiredReceipts.isEmpty) return;
 
     final idsToDelete = expiredReceipts.map((r) => r.id).toList();
 
-    await (database.delete(database.receipts)
-      ..where((r) => r.id.isIn(idsToDelete))).go();
+    await (database.update(database.receipts)..where(
+      (r) => r.id.isIn(idsToDelete),
+    )).write(ReceiptsCompanion(deletedAt: drift.Value(DateTime.now())));
   }
 
   Stream<Map<Store, List<Receipt>>> watchStoresWithReceipts() {
@@ -73,7 +75,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
 
         map.putIfAbsent(store, () => []);
 
-        if (receipt != null) {
+        if (receipt != null && receipt.deletedAt == null) {
           map[store]?.add(receipt);
         }
       }

@@ -12,6 +12,8 @@ class Receipts extends Table {
 
   DateTimeColumn get expiresAt => dateTime().nullable()();
 
+  DateTimeColumn get deletedAt => dateTime().nullable()();
+
   IntColumn get storeId => integer().references(Stores, #id)();
 
   IntColumn get typeId => integer().withDefault(const Constant(32))();
