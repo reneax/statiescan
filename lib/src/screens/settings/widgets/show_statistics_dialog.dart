@@ -17,6 +17,7 @@ class _ShowStatisticsDialogState extends State<ShowStatisticsDialog> {
   int _redeemedAmountInCents = 0;
   int _availableAmountInCents = 0;
   int _redeemedReceipts = 0;
+  int _averageAmountInCents = 0;
 
   bool _isLoading = true;
 
@@ -61,10 +62,14 @@ class _ShowStatisticsDialogState extends State<ShowStatisticsDialog> {
         0,
         (sum, receipt) => sum + (receipt.amountInCents),
       );
-      _availableAmountInCents = notExpiredReceipts.fold(
-        0,
-        (sum, receipt) => sum + (receipt.amountInCents),
-      );
+      _averageAmountInCents =
+          receipts.isNotEmpty
+              ? receipts.fold(
+                    0,
+                    (sum, receipt) => sum + receipt.amountInCents,
+                  ) ~/
+                  receipts.length
+              : 0;
       _redeemedReceipts = redeemedReceipts.length;
       _isLoading = false;
     });
@@ -76,7 +81,10 @@ class _ShowStatisticsDialogState extends State<ShowStatisticsDialog> {
       title: const Text('Statistieken'),
       content:
           _isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const IconText(
+                iconData: Icons.downloading,
+                text: "Data aan het laden...",
+              )
               : SingleChildScrollView(
                 child: ListBody(
                   children: [
@@ -101,6 +109,11 @@ class _ShowStatisticsDialogState extends State<ShowStatisticsDialog> {
                       iconData: Icons.euro,
                       text:
                           'Verkregen bedrag: €${AmountFormatter.amountToString(_redeemedAmountInCents)}',
+                    ),
+                    IconText(
+                      iconData: Icons.stacked_line_chart,
+                      text:
+                          'Gemiddeld per bon: €${AmountFormatter.amountToString(_averageAmountInCents)}',
                     ),
                   ],
                 ),

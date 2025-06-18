@@ -8,27 +8,25 @@ import 'package:url_launcher/url_launcher_string.dart';
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
 
+  void _openStatsPopup(BuildContext context) {
+    showDialog(context: context, builder: (context) => ShowStatisticsDialog());
+  }
+
   @override
   Widget build(BuildContext context) {
-    final InAppReview inAppReview = InAppReview.instance;
-
     return SettingsSection(
       title: "Over",
       children: [
         ListTile(
           title: const Text("Statistieken"),
           leading: const Icon(Icons.bar_chart),
-          onTap:
-              () => showDialog(
-                context: context,
-                builder: (context) => ShowStatisticsDialog(),
-              ),
+          onTap: () => _openStatsPopup(context),
         ),
         ListTile(
           title: const Text("Beoordeel ons"),
           subtitle: const Text("Geef de app een beoordeling"),
           leading: const Icon(Icons.star_rate),
-          onTap: () => inAppReview.openStoreListing(),
+          onTap: () => InAppReview.instance.openStoreListing(),
         ),
         ListTile(
           title: const Text("Github"),
