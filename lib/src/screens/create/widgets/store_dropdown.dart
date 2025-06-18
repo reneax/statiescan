@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 
 class StoreDropdown extends StatelessWidget {
   final bool isLoading;
@@ -37,12 +38,18 @@ class StoreDropdown extends StatelessWidget {
             onChanged: onStoreChanged,
             value: selectedStore,
             disabledHint:
-                !isLoading ? const Text('Maak eerst een winkel aan') : null,
-            decoration: const InputDecoration(
-              labelText: "Winkel",
+                !isLoading
+                    ? Text(AppLocalizations.of(context)!.createStoreFirst)
+                    : null,
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.store,
               border: OutlineInputBorder(),
             ),
-            validator: (value) => value == null ? 'Selecteer een winkel' : null,
+            validator:
+                (value) =>
+                    value == null
+                        ? AppLocalizations.of(context)!.errorEmptyStore
+                        : null,
           ),
         ),
         IconButton.filled(icon: const Icon(Icons.add), onPressed: onStoreAdd),

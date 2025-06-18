@@ -1,0 +1,191 @@
+{
+  "addNewStore": "Nieuwe winkel toevoegen",
+  "storeName": "Winkelnaam",
+  "errorEmptyStore": "Voer een winkelnaam in",
+  "errorTooLongName": "Deze naam is te lang.",
+  "errorStoreExists": "Deze winkel bestaat al.",
+  "cancel": "Annuleren",
+  "save": "Opslaan",
+  "amount": "Bedrag",
+  "errorAmountInvalid": "Voer een geldig bedrag in",
+  "expiryTime": "Vervaltijd",
+  "errorExpiryTimeEmpty": "Selecteer een vervaltijd",
+  "createStoreFirst": "Maak eerst een winkel aan",
+  "store": "Winkel",
+  "errorStoreEmpty": "Selecteer een winkel",
+  "saveReceiptSuccess": "De bon is succesvol opgeslagen.",
+  "addReceipt": "Bon toevoegen",
+  "noExpiration": "Geen",
+  "oneWeek": "1 week",
+  "oneMonth": "1 maand",
+  "threeMonths": "3 maanden",
+  "sixMonths": "6 maanden",
+  "oneYear": "1 jaar",
+  "saveReceipt": "Bon opslaan",
+  "share": "Delen",
+  "noExpiryDate": "Geen verloopdatum",
+  "expiresOnDate": "Verloopt op {date}",
+  "@expiresOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "expiredOnDate": "Verlopen op {date}",
+  "@expiredOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteHintSuggestion": "Houd ingedrukt om te verwijderen.",
+  "amountDescription": "Het bedrag is €{amount}",
+  "@amountDescription": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptFileName": "emballage",
+  "shareMessage": "Emballage bon van €{amount} die je kunt inleveren bij {storeName}. Verstuurd vanaf de Statiescan app.",
+  "@shareMessage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "storeName": {
+        "type": "String"
+      }
+    }
+  },
+  "dontForgetDeleteAfterShare": "Vergeet de bon niet te verwijderen na het delen.",
+  "receiptDeleteSuccess": "De bon is succesvol verwijderd.",
+  "receiptDetailsTitle": "Bon weergeven",
+  "nextButton": "Verder",
+  "continueButton": "Doorgaan",
+  "slideOneTitle": "Scannen met app",
+  "slideOneDescription": "Scan statiegeld bonnen eenvoudig met je telefoon.",
+  "slideTwoTitle": "Bonnetjes terugvinden",
+  "slideTwoDescription": "Vind je opgeslagen bonnetjes snel terug.",
+  "slideThreeTitle": "Bon vervalt melding",
+  "slideThreeDescription": "Krijg meldingen voordat je bon vervalt.",
+  "slideFourTitle": "Delen met mensen",
+  "slideFourDescription": "Deel je bonnen gemakkelijk met anderen.",
+  "noReceiptsFound": "Geen bonnen gevonden",
+  "addNewReceiptHint": "Voeg een nieuwe bon toe met het plusicoon onderaan.",
+  "filterStore": "Filter op winkel",
+  "allStores": "Alle winkels",
+  "receiptsTitle": "Bonnen",
+  "processingReceipt": "Verwerken...",
+  "scanReceiptTitle": "Bon scannen",
+  "aboutSection": "Over",
+  "statisticsOption": "Statistieken",
+  "reviewUsOption": "Beoordeel ons",
+  "reviewUsDescription": "Geef de app een beoordeling",
+  "githubOption": "Github",
+  "githubDescription": "Bekijk de broncode van de app",
+  "generalSection": "Algemeen",
+  "vibrationOption": "Trillen bij acties",
+  "nextAfterDeleteOption": "Volgende bon na verwijderen",
+  "nextAfterDeleteDescription": "Ga na het verwijderen naar de volgende bon van de supermarkt.",
+  "deleteExpiredReceiptsOption": "Verlopen bonnen wissen",
+  "deleteExpiredReceiptsDescription": "Bon automatisch verwijderen als deze verloopt.",
+  "errorNotificationPermissionDenied": "Kon geen permissie verkrijgen. Geef de app notificatie permissies via instellingen.",
+  "notificationSection": "Meldingen",
+  "notificationsEnabledOption": "Meldingen ontvangen",
+  "daysBeforeExpiryOption": "Aantal dagen voor bonverval melding",
+  "daysBeforeExpiryDescription": "Stel in hoeveel dagen van tevoren je een melding wilt over het verlopen van je bon.",
+  "scannerSection": "Scanner",
+  "automaticAmountDetectionOption": "Automatisch bedrag invullen",
+  "automaticAmountDetectionDescription": "Vult automatisch het bonbedrag in wanneer mogelijk. Dit vereist meer rekenkracht.",
+  "daysBeforeNotificationTitle": "Dagen voor melding bon",
+  "notificationDays": "{day, plural, =1{1 dag} other{{day} dagen}}",
+  "@notificationDays": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "statisticsTitle": "Statistieken",
+  "loadingStatistics": "Data aan het laden...",
+  "storeCount": "Aantal winkels: {count}",
+  "@storeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "redeemableReceipts": "Inleverbare bonnen: {count}",
+  "@redeemableReceipts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "redeemedReceipts": "Ingeleverde bonnen: {count}",
+  "@redeemedReceipts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "availableAmount": "Beschikbaar bedrag: €{amount}",
+  "@availableAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "redeemedAmount": "Verkregen bedrag: €{amount}",
+  "@redeemedAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "averageAmountPerReceipt": "Gemiddeld per bon: €{amount}",
+  "@averageAmountPerReceipt": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Instellingen",
+  "receiptExpiringSoon": "Bon verloopt binnenkort",
+  "receiptExpiringChannel": "Bon bijna vervallen",
+  "receiptExpiringChannelDescription": "Meldingen voor bonnen die binnenkort vervallen.",
+  "receiptExpiresIn": "Een bon van {storeName} verloopt over {days, plural, =0{0 dagen} =1{1 dag} other{{days} dagen}}.",
+  "@receiptExpiresIn": {
+    "placeholders": {
+      "storeName": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptExpired": "Bon verlopen",
+  "receiptExpiresOn": "Een bon van {storeName} is vandaag verlopen.",
+  "@receiptExpiresOn": {
+    "placeholders": {
+      "storeName": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptExpiredChannel": "Bon verlopen",
+  "receiptExpiredChannelDescription": "Meldingen voor bonnen die binnenkort vervallen.",
+  "receiptsTab": "Bonnen",
+  "settingsTab": "Instellingen"
+}

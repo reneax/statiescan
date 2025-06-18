@@ -11,7 +11,7 @@ void main() async {
     DeviceOrientation.portraitUp,
   ]);
 
-  await SharedPrefs.init();
+  await SharedPrefs.initialize();
 
   runApp(const StatiescanApp());
 }

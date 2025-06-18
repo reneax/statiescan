@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/utils/convert_utils.dart';
 
 class ReceiptDetails extends StatelessWidget {
@@ -29,7 +30,12 @@ class ReceiptDetails extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 6),
             child: Text(
-              ConvertUtils.getExpiryText(expiresAt, true),
+              ConvertUtils.getLocalizedExpiryText(
+                AppLocalizations.of(context)!,
+                Localizations.localeOf(context),
+                expiresAt,
+                true,
+              ),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withAlpha(150),
               ),

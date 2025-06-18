@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/providers/ui_state_provider.dart';
 import 'package:statiescan/src/router.dart';
 import 'package:statiescan/src/services/notification_service.dart';
@@ -14,7 +15,7 @@ class StatiescanApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ImageCacheHelper(context).cacheImages();
-    initializeDateFormatting('nl');
+    initializeDateFormatting();
 
     return MultiProvider(
       providers: [
@@ -29,6 +30,8 @@ class StatiescanApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         title: 'Statiescan',
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         themeMode: ThemeMode.system,
         routerConfig: appRouter,
         theme: appTheme(Brightness.light),

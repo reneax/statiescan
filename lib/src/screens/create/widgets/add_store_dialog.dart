@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 
 class AddStoreDialog extends StatefulWidget {
   final List<Store> existingStores;
@@ -29,27 +30,29 @@ class _AddStoreDialogState extends State<AddStoreDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Nieuwe winkel toevoegen"),
+      title: Text(AppLocalizations.of(context)!.addNewStore),
       content: Form(
         key: _formKey,
         child: TextFormField(
           controller: _controller,
-          decoration: const InputDecoration(labelText: "Winkelnaam"),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context)!.storeName,
+          ),
           autofocus: true,
           onFieldSubmitted: (_) => _onSave(),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return 'Voer een winkelnaam in';
+              return AppLocalizations.of(context)!.errorEmptyStore;
             }
 
             if (value.length >= 15) {
-              return 'Deze naam is te lang.';
+              return AppLocalizations.of(context)!.errorTooLongName;
             }
 
             if (widget.existingStores
                 .map((store) => store.name)
                 .contains(value)) {
-              return 'Deze winkel bestaat al.';
+              return AppLocalizations.of(context)!.errorStoreExists;
             }
 
             return null;
@@ -59,9 +62,12 @@ class _AddStoreDialogState extends State<AddStoreDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text("Annuleren"),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
-        FilledButton(onPressed: _onSave, child: const Text("Opslaan")),
+        FilledButton(
+          onPressed: _onSave,
+          child: Text(AppLocalizations.of(context)!.save),
+        ),
       ],
     );
   }

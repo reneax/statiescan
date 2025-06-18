@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
-import 'package:statiescan/src/screens/intro/intro_data.dart';
 import 'package:statiescan/src/screens/intro/widgets/intro_carousel/widgets/carousel_display.dart';
 import 'package:statiescan/src/screens/intro/widgets/intro_carousel/widgets/carousel_footer.dart';
 import 'package:statiescan/src/services/notification_service.dart';
@@ -26,7 +26,34 @@ class _IntroCarouselState extends State<IntroCarousel> {
     );
   }
 
-  bool _hasNextPage() => _currentIndex < introSlidesData.length - 1;
+  List<Map<String, String>> get _slidesData {
+    final appLocalizations = AppLocalizations.of(context)!;
+
+    return [
+      {
+        'title': appLocalizations.slideOneTitle,
+        'description': appLocalizations.slideOneDescription,
+        'image': 'assets/images/scan_receipt.png',
+      },
+      {
+        'title': appLocalizations.slideTwoTitle,
+        'description': appLocalizations.slideTwoDescription,
+        'image': 'assets/images/find_receipt.png',
+      },
+      {
+        'title': appLocalizations.slideThreeTitle,
+        'description': appLocalizations.slideThreeDescription,
+        'image': 'assets/images/bell_receipt.png',
+      },
+      {
+        'title': appLocalizations.slideFourTitle,
+        'description': appLocalizations.slideFourDescription,
+        'image': 'assets/images/share_receipt.png',
+      },
+    ];
+  }
+
+  bool _hasNextPage() => _currentIndex < _slidesData.length - 1;
 
   void _setCurrentIndex(int index) {
     setState(() {
@@ -66,14 +93,14 @@ class _IntroCarouselState extends State<IntroCarousel> {
       children: [
         CarouselDisplay(
           pageController: _pageController,
-          introSlidesData: introSlidesData,
+          introSlidesData: _slidesData,
           currentIndex: _currentIndex,
           setCurrentIndex: _setCurrentIndex,
         ),
         CarouselFooter(
           hasNextPage: _hasNextPage(),
           handleNextButton: _handleNextButton,
-          introSlidesAmount: introSlidesData.length,
+          introSlidesAmount: _slidesData.length,
           currentSlideIndex: _currentIndex,
         ),
       ],

@@ -1,26 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 
-class AppNavigationBar extends StatelessWidget {
+class AppNavigationBar extends StatefulWidget {
   const AppNavigationBar({super.key});
 
-  static const List<({String location, NavigationDestination destination})>
-  tabs = [
-    (
-      location: '/receipts',
-      destination: NavigationDestination(
-        icon: Icon(Icons.receipt_long),
-        label: "Bonnen",
+  @override
+  State<AppNavigationBar> createState() => _AppNavigationBarState();
+}
+
+class _AppNavigationBarState extends State<AppNavigationBar> {
+  List<({String location, NavigationDestination destination})> get tabs {
+    return [
+      (
+        location: '/receipts',
+        destination: NavigationDestination(
+          icon: Icon(Icons.receipt_long),
+          label: AppLocalizations.of(context)!.receiptsTab,
+        ),
       ),
-    ),
-    (
-      location: '/settings',
-      destination: NavigationDestination(
-        icon: Icon(Icons.settings),
-        label: "Instellingen",
+      (
+        location: '/settings',
+        destination: NavigationDestination(
+          icon: Icon(Icons.settings),
+          label: AppLocalizations.of(context)!.settingsTab,
+        ),
       ),
-    ),
-  ];
+    ];
+  }
 
   int _locationToTabIndex(String location) {
     final index = tabs.indexWhere((tab) => tab.location == location);

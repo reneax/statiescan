@@ -1,6 +1,8 @@
 import 'package:barcode_widget/barcode_widget.dart' as barcode_widget;
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 
 class ConvertUtils {
   static final Map<BarcodeFormat, barcode_widget.BarcodeType>
@@ -31,17 +33,24 @@ class ConvertUtils {
     return type;
   }
 
-  static String getExpiryText(DateTime? expiresAt, bool shortDate) {
+  static String getLocalizedExpiryText(
+    AppLocalizations appLocalizations,
+    Locale locale,
+    DateTime? expiresAt,
+    bool shortDate,
+  ) {
     if (expiresAt == null) {
-      return "Geen verloopdatum";
+      return appLocalizations.noExpiryDate;
     }
 
     final formattedDate = (shortDate
-            ? DateFormat.yMd('nl')
-            : DateFormat.yMMMMd('nl'))
+            ? DateFormat.yMd(locale.toLanguageTag())
+            : DateFormat.yMMMMd(locale.toLanguageTag()))
         .format(expiresAt);
     final isExpired = DateTime.now().isAfter(expiresAt);
 
-    return "${isExpired ? 'Verlopen' : 'Verloopt'} op $formattedDate";
+    return isExpired
+        ? appLocalizations.expiredOnDate(formattedDate)
+        : appLocalizations.expiresOnDate(formattedDate);
   }
 }

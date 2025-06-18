@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/widgets/icon_text.dart';
 
@@ -62,6 +63,10 @@ class _ShowStatisticsDialogState extends State<ShowStatisticsDialog> {
         0,
         (sum, receipt) => sum + (receipt.amountInCents),
       );
+      _availableAmountInCents = notExpiredReceipts.fold(
+        0,
+        (sum, receipt) => sum + (receipt.amountInCents),
+      );
       _averageAmountInCents =
           receipts.isNotEmpty
               ? receipts.fold(
@@ -78,42 +83,53 @@ class _ShowStatisticsDialogState extends State<ShowStatisticsDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Statistieken'),
+      title: Text(AppLocalizations.of(context)!.statisticsTitle),
       content:
           _isLoading
-              ? const IconText(
+              ? IconText(
                 iconData: Icons.downloading,
-                text: "Data aan het laden...",
+                text: AppLocalizations.of(context)!.loadingStatistics,
               )
               : SingleChildScrollView(
                 child: ListBody(
                   children: [
                     IconText(
                       iconData: Icons.store,
-                      text: 'Aantal winkels: $_storesAmount',
+                      text: AppLocalizations.of(
+                        context,
+                      )!.storeCount(_storesAmount),
                     ),
                     IconText(
                       iconData: Icons.receipt_long,
-                      text: 'Inleverbare bonnen: $_receiptsAmount',
+                      text: AppLocalizations.of(
+                        context,
+                      )!.redeemableReceipts(_receiptsAmount),
                     ),
                     IconText(
                       iconData: Icons.check,
-                      text: 'Ingeleverde bonnen: $_redeemedReceipts',
+                      text: AppLocalizations.of(
+                        context,
+                      )!.redeemedReceipts(_redeemedReceipts),
                     ),
                     IconText(
                       iconData: Icons.access_time,
-                      text:
-                          "Beschikbaar bedrag: €${AmountFormatter.amountToString(_availableAmountInCents)}",
+                      text: AppLocalizations.of(context)!.availableAmount(
+                        AmountFormatter.amountToString(_availableAmountInCents),
+                      ),
                     ),
                     IconText(
                       iconData: Icons.euro,
-                      text:
-                          'Verkregen bedrag: €${AmountFormatter.amountToString(_redeemedAmountInCents)}',
+                      text: AppLocalizations.of(context)!.redeemedAmount(
+                        AmountFormatter.amountToString(_redeemedAmountInCents),
+                      ),
                     ),
                     IconText(
                       iconData: Icons.stacked_line_chart,
-                      text:
-                          'Gemiddeld per bon: €${AmountFormatter.amountToString(_averageAmountInCents)}',
+                      text: AppLocalizations.of(
+                        context,
+                      )!.averageAmountPerReceipt(
+                        AmountFormatter.amountToString(_averageAmountInCents),
+                      ),
                     ),
                   ],
                 ),

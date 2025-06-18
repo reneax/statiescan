@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/screens/create/enums/expiry_time.dart';
 
 class ExpiryTimeDropdown extends StatelessWidget {
@@ -23,17 +24,20 @@ class ExpiryTimeDropdown extends StatelessWidget {
                   .map(
                     (expireTime) => DropdownMenuItem(
                       value: expireTime,
-                      child: Text(expireTime.label),
+                      child: Text(expireTime.getLabel(context)),
                     ),
                   )
                   .toList(),
           onChanged: onTimeChanged,
-          decoration: const InputDecoration(
-            labelText: "Vervaltijd",
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context)!.expiryTime,
+            border: const OutlineInputBorder(),
           ),
           validator:
-              (value) => value == null ? 'Selecteer een vervaltijd' : null,
+              (value) =>
+                  value == null
+                      ? AppLocalizations.of(context)!.errorExpiryTimeEmpty
+                      : null,
         ),
       ],
     );

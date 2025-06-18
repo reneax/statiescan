@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 
 class StoresDropdown extends StatelessWidget {
   final List<Store> stores;
@@ -20,12 +21,15 @@ class StoresDropdown extends StatelessWidget {
       child: DropdownButtonFormField<int>(
         value: selectedStoreId,
         isExpanded: true,
-        decoration: const InputDecoration(
-          labelText: 'Filter op winkel',
+        decoration: InputDecoration(
+          labelText: AppLocalizations.of(context)!.filterStore,
           border: OutlineInputBorder(),
         ),
         items: [
-          const DropdownMenuItem<int>(value: null, child: Text('Alle winkels')),
+          DropdownMenuItem<int>(
+            value: null,
+            child: Text(AppLocalizations.of(context)!.allStores),
+          ),
           ...stores.map(
             (entry) =>
                 DropdownMenuItem<int>(value: entry.id, child: Text(entry.name)),
