@@ -5,6 +5,7 @@
   "errorTooLongName": "This name is too long.",
   "errorStoreExists": "This store already exists.",
   "cancel": "Cancel",
+  "close": "Close",
   "save": "Save",
   "amount": "Amount",
   "errorAmountInvalid": "Enter a valid amount",
@@ -187,5 +188,14 @@
   "receiptExpiredChannel": "Receipt expired",
   "receiptExpiredChannelDescription": "Notifications for receipts that are about to expire.",
   "receiptsTab": "Receipts",
-  "settingsTab": "Settings"
+  "settingsTab": "Settings",
+  "preferencesSection": "Preferences",
+  "languageOption": "Change language",
+  "themeOption": "Choose theme",
+  "systemLanguage": "System",
+  "languageTitle": "Language",
+  "themeTitle": "Theme",
+  "systemTheme": "System",
+  "lightTheme": "Light",
+  "darkTheme": "Dark"
 }

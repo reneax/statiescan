@@ -3,6 +3,7 @@ import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/screens/settings/widgets/sections/about_section.dart';
 import 'package:statiescan/src/screens/settings/widgets/sections/general_section.dart';
 import 'package:statiescan/src/screens/settings/widgets/sections/notification_section.dart';
+import 'package:statiescan/src/screens/settings/widgets/sections/preferences_section.dart';
 import 'package:statiescan/src/screens/settings/widgets/sections/scanner_section.dart';
 import 'package:statiescan/src/widgets/screen_wrapper.dart';
 
@@ -25,6 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               GeneralSection(),
               ScannerSection(),
               NotificationSection(),
+              PreferencesSection(),
               AboutSection(),
             ]),
           ),

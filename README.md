@@ -19,7 +19,8 @@ De Statiescan app lost deze problemen op door de bonnen te digitaliseren.
 2. Installeer Flutter en Android Studio.
 3. Gebruik `flutter pub get` om de benodigde packages te installeren.
 4. Doe `dart run build_runner build` om de database code opnieuw te genereren.
-5. Maak gebruik van `flutter build apk` om de app te builden.
+5. Gebruik vervolgens `flutter gen-l10n` om de vertalingen opnieuw te genereren.
+6. Maak gebruik van `flutter build apk` om de app te builden.
 
 ### Contributors
 

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:statiescan/src/database/app_database.dart';
 import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
-import 'package:statiescan/src/screens/settings/widgets/notification_days_popup.dart';
+import 'package:statiescan/src/screens/settings/widgets/notification_days_dialog.dart';
 import 'package:statiescan/src/screens/settings/widgets/settings_section.dart';
 import 'package:statiescan/src/services/notification_service.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
@@ -88,10 +88,14 @@ class _GeneralSectionState extends State<NotificationSection> {
   }
 
   Future<void> _showNotificationDaysPopup() async {
-    final int? selectedDay = await showNotificationDaysPopup(
-      context,
-      AppSettings.notificationDaysBeforeExpiry.get(),
+    final int? selectedDay = await showDialog(
+      context: context,
+      builder:
+          (context) => NotificationDaysDialog(
+            selectedDay: AppSettings.notificationDaysBeforeExpiry.get(),
+          ),
     );
+
     if (selectedDay != null) {
       _updateNotificationDays(selectedDay);
     }

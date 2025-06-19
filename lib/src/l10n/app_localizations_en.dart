@@ -27,6 +27,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
+  String get close => 'Close';
+
+  @override
   String get save => 'Save';
 
   @override
@@ -333,4 +336,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsTab => 'Settings';
+
+  @override
+  String get preferencesSection => 'Preferences';
+
+  @override
+  String get languageOption => 'Change language';
+
+  @override
+  String get themeOption => 'Choose theme';
+
+  @override
+  String get systemLanguage => 'System';
+
+  @override
+  String get languageTitle => 'Language';
+
+  @override
+  String get themeTitle => 'Theme';
+
+  @override
+  String get systemTheme => 'System';
+
+  @override
+  String get lightTheme => 'Light';
+
+  @override
+  String get darkTheme => 'Dark';
 }

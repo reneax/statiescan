@@ -134,6 +134,12 @@ abstract class AppLocalizations {
   /// **'Annuleren'**
   String get cancel;
 
+  /// No description provided for @close.
+  ///
+  /// In nl, this message translates to:
+  /// **'Sluiten'**
+  String get close;
+
   /// No description provided for @save.
   ///
   /// In nl, this message translates to:
@@ -649,6 +655,60 @@ abstract class AppLocalizations {
   /// In nl, this message translates to:
   /// **'Instellingen'**
   String get settingsTab;
+
+  /// No description provided for @preferencesSection.
+  ///
+  /// In nl, this message translates to:
+  /// **'Voorkeuren'**
+  String get preferencesSection;
+
+  /// No description provided for @languageOption.
+  ///
+  /// In nl, this message translates to:
+  /// **'Taal aanpassen'**
+  String get languageOption;
+
+  /// No description provided for @themeOption.
+  ///
+  /// In nl, this message translates to:
+  /// **'Thema veranderen'**
+  String get themeOption;
+
+  /// No description provided for @systemLanguage.
+  ///
+  /// In nl, this message translates to:
+  /// **'Systeem'**
+  String get systemLanguage;
+
+  /// No description provided for @languageTitle.
+  ///
+  /// In nl, this message translates to:
+  /// **'Taal'**
+  String get languageTitle;
+
+  /// No description provided for @themeTitle.
+  ///
+  /// In nl, this message translates to:
+  /// **'Thema'**
+  String get themeTitle;
+
+  /// No description provided for @systemTheme.
+  ///
+  /// In nl, this message translates to:
+  /// **'Systeem'**
+  String get systemTheme;
+
+  /// No description provided for @lightTheme.
+  ///
+  /// In nl, this message translates to:
+  /// **'Licht'**
+  String get lightTheme;
+
+  /// No description provided for @darkTheme.
+  ///
+  /// In nl, this message translates to:
+  /// **'Donker'**
+  String get darkTheme;
 }
 
 class _AppLocalizationsDelegate

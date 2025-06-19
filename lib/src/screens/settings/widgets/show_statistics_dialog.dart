@@ -19,7 +19,6 @@ class _ShowStatisticsDialogState extends State<ShowStatisticsDialog> {
   int _availableAmountInCents = 0;
   int _redeemedReceipts = 0;
   int _averageAmountInCents = 0;
-
   bool _isLoading = true;
 
   @override
@@ -136,7 +135,7 @@ class _ShowStatisticsDialogState extends State<ShowStatisticsDialog> {
               ),
       actions: [
         TextButton(
-          child: const Text('Sluiten'),
+          child: Text(AppLocalizations.of(context)!.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ],

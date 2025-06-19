@@ -5,6 +5,7 @@
   "errorTooLongName": "Deze naam is te lang.",
   "errorStoreExists": "Deze winkel bestaat al.",
   "cancel": "Annuleren",
+  "close": "Sluiten",
   "save": "Opslaan",
   "amount": "Bedrag",
   "errorAmountInvalid": "Voer een geldig bedrag in",
@@ -187,5 +188,14 @@
   "receiptExpiredChannel": "Bon verlopen",
   "receiptExpiredChannelDescription": "Meldingen voor bonnen die binnenkort vervallen.",
   "receiptsTab": "Bonnen",
-  "settingsTab": "Instellingen"
+  "settingsTab": "Instellingen",
+  "preferencesSection": "Voorkeuren",
+  "languageOption": "Taal aanpassen",
+  "themeOption": "Thema veranderen",
+  "systemLanguage": "Systeem",
+  "languageTitle": "Taal",
+  "themeTitle": "Thema",
+  "systemTheme": "Systeem",
+  "lightTheme": "Licht",
+  "darkTheme": "Donker"
 }
