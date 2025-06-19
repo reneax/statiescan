@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -24,6 +26,7 @@ class NotificationService {
   }
 
   Future<void> scheduleReceipts(
+    BuildContext context,
     List<Receipt> receipts,
     List<Store> stores,
   ) async {
@@ -33,7 +36,7 @@ class NotificationService {
 
       if (store == null) continue;
 
-      await scheduleReceiptExpiryNotification(receipt, store);
+      await scheduleReceiptExpiryNotification(context, receipt, store);
     }
   }
 
@@ -59,6 +62,7 @@ class NotificationService {
   }
 
   Future<void> scheduleReceiptExpiryNotification(
+    BuildContext context,
     Receipt receipt,
     Store store,
   ) async {
@@ -81,17 +85,17 @@ class NotificationService {
 
     await _notificationsPlugin.zonedSchedule(
       receipt.id,
-      'Bon verloopt binnenkort',
-      'Een bon van $storeName verloopt over $daysBefore ${daysBefore == 1 ? 'dag' : 'dagen'}.',
+      AppLocalizations.of(context)!.receiptExpiringSoon,
+      AppLocalizations.of(context)!.receiptExpiresIn(storeName, daysBefore),
       receiptReminder,
-      const NotificationDetails(
+      NotificationDetails(
         android: AndroidNotificationDetails(
           'receipt_expiry_channel_soon',
-          'Bon bijna vervallen',
-          channelDescription: 'Meldingen voor bonnen die binnenkort vervallen.',
+          AppLocalizations.of(context)!.receiptExpiringChannel,
+          channelDescription:
+              AppLocalizations.of(context)!.receiptExpiringChannelDescription,
           importance: Importance.high,
           priority: Priority.high,
-          ticker: 'Bon verloopt binnenkort',
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
@@ -100,19 +104,21 @@ class NotificationService {
 
     final tz.TZDateTime expiryTime = tz.TZDateTime.from(expiryDate, tz.local);
 
+    if (!context.mounted) return;
+
     await _notificationsPlugin.zonedSchedule(
       receipt.id + 100000,
-      'Bon verlopen',
-      'Een bon van $storeName is vandaag verlopen.',
+      AppLocalizations.of(context)!.receiptExpired,
+      AppLocalizations.of(context)!.receiptExpiresOn(storeName),
       expiryTime,
-      const NotificationDetails(
+      NotificationDetails(
         android: AndroidNotificationDetails(
           'receipt_expired_channel_today',
-          'Bon verlopen',
-          channelDescription: 'Meldingen voor bonnen die vandaag verlopen.',
+          AppLocalizations.of(context)!.receiptExpiredChannel,
+          channelDescription:
+              AppLocalizations.of(context)!.receiptExpiredChannelDescription,
           importance: Importance.defaultImportance,
           priority: Priority.defaultPriority,
-          ticker: 'Bon verlopen',
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,

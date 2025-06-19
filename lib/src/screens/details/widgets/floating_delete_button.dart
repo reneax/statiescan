@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
 
 class FloatingDeleteButton extends StatelessWidget {
@@ -17,7 +18,7 @@ class FloatingDeleteButton extends StatelessWidget {
             () => SnackbarCreator.show(
               context,
               status: SnackbarStatus.info,
-              message: "Houd ingedrukt om te verwijderen.",
+              message: AppLocalizations.of(context)!.deleteHintSuggestion,
             ),
         child: const Icon(Icons.delete),
       ),

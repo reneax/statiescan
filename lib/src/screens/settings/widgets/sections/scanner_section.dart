@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/settings/widgets/settings_section.dart';
 
@@ -19,12 +20,14 @@ class _ScannerSectionState extends State<ScannerSection> {
   @override
   Widget build(BuildContext context) {
     return SettingsSection(
-      title: "Scanner",
+      title: AppLocalizations.of(context)!.scannerSection,
       children: [
         SwitchListTile(
-          title: const Text("Automatisch bedrag invullen"),
-          subtitle: const Text(
-            "Vult automatisch het bonbedrag in wanneer mogelijk. Dit vereist meer rekenkracht.",
+          title: Text(
+            AppLocalizations.of(context)!.automaticAmountDetectionOption,
+          ),
+          subtitle: Text(
+            AppLocalizations.of(context)!.automaticAmountDetectionDescription,
           ),
           secondary: const Icon(Icons.price_check),
           value: AppSettings.automaticAmountDetection.get(),

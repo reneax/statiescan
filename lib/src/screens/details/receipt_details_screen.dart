@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/details/widgets/floating_delete_button.dart';
 import 'package:statiescan/src/screens/details/widgets/information_card/actions_row.dart';
@@ -76,15 +77,22 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
     );
 
     final tempDir = await getTemporaryDirectory();
-    final tempFile = File('${tempDir.path}/emballage.jpg');
 
-    await tempFile.writeAsBytes(imageBytes);
+    if (!mounted) return;
+
+    final tempFile = File(
+      '${tempDir.path}/${AppLocalizations.of(context)!.receiptFileName}.jpg',
+    );
 
     final params = ShareParams(
-      text:
-          'Emballage bon van €${AmountFormatter.amountToString(currentReceipt.amountInCents)} die je kunt inleveren bij ${currentStore.name}. Verstuurd vanaf de Statiescan app.',
+      text: AppLocalizations.of(context)!.shareMessage(
+        AmountFormatter.amountToString(currentReceipt.amountInCents),
+        currentStore.name,
+      ),
       files: [XFile(tempFile.path)],
     );
+
+    await tempFile.writeAsBytes(imageBytes);
 
     final result = await SharePlus.instance.share(params);
 
@@ -93,7 +101,7 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
         context,
         status: SnackbarStatus.info,
         duration: Duration(seconds: 5),
-        message: "Vergeet de bon niet te verwijderen na het delen.",
+        message: AppLocalizations.of(context)!.dontForgetDeleteAfterShare,
       );
     }
   }
@@ -123,7 +131,7 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
       context,
       status: SnackbarStatus.success,
       duration: Duration(seconds: 2),
-      message: "De bon is succesvol verwijderd.",
+      message: AppLocalizations.of(context)!.receiptDeleteSuccess,
     );
 
     if (AppSettings.goToNextWhenDeleted.get()) {
@@ -159,7 +167,9 @@ class _ReceiptDetailsScreenState extends State<ReceiptDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenWrapper(
-      appBar: AppBar(title: Text("Bon weergeven")),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.receiptDetailsTitle),
+      ),
       floatingActionButton: FloatingDeleteButton(onDeletePress: _deleteReceipt),
       child: SingleChildScrollView(
         child: Padding(

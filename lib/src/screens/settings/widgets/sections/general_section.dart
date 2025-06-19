@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/settings/widgets/settings_section.dart';
 import 'package:vibration/vibration.dart';
@@ -36,27 +37,29 @@ class _GeneralSectionState extends State<GeneralSection> {
   @override
   Widget build(BuildContext context) {
     return SettingsSection(
-      title: "Algemeen",
+      title: AppLocalizations.of(context)!.generalSection,
       children: [
         SwitchListTile(
-          title: const Text("Trillen bij acties"),
+          title: Text(AppLocalizations.of(context)!.vibrationOption),
           secondary: const Icon(Icons.vibration),
           value: AppSettings.vibrationEnabled.get(),
           onChanged: _toggleVibration,
         ),
         SwitchListTile(
-          title: const Text("Volgende bon na verwijderen"),
-          subtitle: const Text(
-            "Ga na het verwijderen naar de volgende bon van de supermarkt.",
+          title: Text(AppLocalizations.of(context)!.nextAfterDeleteOption),
+          subtitle: Text(
+            AppLocalizations.of(context)!.nextAfterDeleteDescription,
           ),
           secondary: const Icon(Icons.double_arrow),
           value: AppSettings.goToNextWhenDeleted.get(),
           onChanged: _toggleGoToNext,
         ),
         SwitchListTile(
-          title: const Text("Verlopen bonnen wissen"),
-          subtitle: const Text(
-            "Bon automatisch verwijderen als deze verloopt.",
+          title: Text(
+            AppLocalizations.of(context)!.deleteExpiredReceiptsOption,
+          ),
+          subtitle: Text(
+            AppLocalizations.of(context)!.deleteExpiredReceiptsDescription,
           ),
           secondary: const Icon(Icons.auto_delete),
           value: AppSettings.deleteOnExpiry.get(),

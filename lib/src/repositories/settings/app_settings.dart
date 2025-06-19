@@ -44,6 +44,18 @@ class AppSettings {
     defaultValue: false,
   );
 
+  static const Setting<String> selectedLanguage = Setting<String>(
+    key: 'selectedLanguage',
+    type: SettingType.string,
+    defaultValue: "system",
+  );
+
+  static const Setting<String> selectedTheme = Setting<String>(
+    key: 'selectedTheme',
+    type: SettingType.string,
+    defaultValue: "system",
+  );
+
   static const Setting<int?> lastChosenStoreId = Setting<int?>(
     key: 'lastChosenStoreId',
     type: SettingType.int,

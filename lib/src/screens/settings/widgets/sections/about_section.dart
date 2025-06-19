@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/screens/settings/widgets/github_icon.dart';
 import 'package:statiescan/src/screens/settings/widgets/settings_section.dart';
 import 'package:statiescan/src/screens/settings/widgets/show_statistics_dialog.dart';
@@ -15,23 +16,23 @@ class AboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingsSection(
-      title: "Over",
+      title: AppLocalizations.of(context)!.aboutSection,
       children: [
         ListTile(
-          title: const Text("Statistieken"),
+          title: Text(AppLocalizations.of(context)!.statisticsOption),
           leading: const Icon(Icons.bar_chart),
           onTap: () => _openStatsPopup(context),
         ),
         ListTile(
-          title: const Text("Beoordeel ons"),
-          subtitle: const Text("Geef de app een beoordeling"),
+          title: Text(AppLocalizations.of(context)!.reviewUsOption),
+          subtitle: Text(AppLocalizations.of(context)!.reviewUsDescription),
           leading: const Icon(Icons.star_rate),
           onTap: () => InAppReview.instance.openStoreListing(),
         ),
         ListTile(
-          title: const Text("Github"),
+          title: Text(AppLocalizations.of(context)!.githubOption),
           leading: const GithubIcon(),
-          subtitle: const Text("Bekijk de broncode van de app"),
+          subtitle: Text(AppLocalizations.of(context)!.githubDescription),
           onTap: () => launchUrlString("https://github.com/reneax/statiescan"),
         ),
       ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 
 class ActionsRow extends StatelessWidget {
   final VoidCallback onShareButtonPress;
@@ -12,7 +13,7 @@ class ActionsRow extends StatelessWidget {
         FilledButton.icon(
           onPressed: onShareButtonPress,
           icon: const Icon(Icons.share),
-          label: const Text("Delen"),
+          label: Text(AppLocalizations.of(context)!.share),
         ),
       ],
     );

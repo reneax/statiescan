@@ -1,15 +1,17 @@
+import 'package:flutter/cupertino.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
+
 enum ExpiryTime {
-  noExpiration(0, 'Geen'),
-  oneWeek(1, '1 week'),
-  oneMonth(2, '1 maand'),
-  threeMonths(3, '3 maanden'),
-  sixMonths(4, '6 maanden'),
-  oneYear(5, '1 jaar');
+  noExpiration(0),
+  oneWeek(1),
+  oneMonth(2),
+  threeMonths(3),
+  sixMonths(4),
+  oneYear(5);
 
   final int id;
-  final String label;
 
-  const ExpiryTime(this.id, this.label);
+  const ExpiryTime(this.id);
 
   DateTime? getExpiryDate(DateTime from) {
     switch (this) {
@@ -26,5 +28,18 @@ enum ExpiryTime {
       case ExpiryTime.oneYear:
         return DateTime(from.year + 1, from.month, from.day);
     }
+  }
+
+  String getLabel(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
+    return switch (this) {
+      ExpiryTime.noExpiration => loc.noExpiration,
+      ExpiryTime.oneWeek => loc.oneWeek,
+      ExpiryTime.oneMonth => loc.oneMonth,
+      ExpiryTime.threeMonths => loc.threeMonths,
+      ExpiryTime.sixMonths => loc.sixMonths,
+      ExpiryTime.oneYear => loc.oneYear,
+    };
   }
 }

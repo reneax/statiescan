@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:provider/provider.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/receipts/widgets/no_receipts_hint.dart';
 import 'package:statiescan/src/screens/receipts/widgets/receipt_tile/receipt_tile.dart';
@@ -96,7 +97,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenWrapper(
-      appBar: AppBar(title: Text("Bonnen")),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.receiptsTitle)),
       child: StreamBuilder<Map<Store, List<Receipt>>>(
         stream: watchStoresWithReceipts(),
         builder: (context, snapshot) {

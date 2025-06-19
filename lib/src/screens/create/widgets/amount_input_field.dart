@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 
 class AmountInputField extends StatelessWidget {
@@ -31,12 +32,15 @@ class AmountInputField extends StatelessWidget {
         FilteringTextInputFormatter.allow(RegExp(r'^\d*[,.]?\d{0,2}')),
       ],
       decoration: InputDecoration(
-        labelText: "Bedrag",
+        labelText: AppLocalizations.of(context)!.amount,
         prefixIcon: const Icon(Icons.euro),
         border: const OutlineInputBorder(),
       ),
       validator:
-          (value) => !_isValidInput(value) ? 'Voer een geldig bedrag in' : null,
+          (value) =>
+              !_isValidInput(value)
+                  ? AppLocalizations.of(context)!.errorAmountInvalid
+                  : null,
     );
   }
 }

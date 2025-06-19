@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:statiescan/src/database/app_database.dart';
-import 'package:statiescan/src/widgets/icon_text.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/utils/amount_formatter.dart';
 import 'package:statiescan/src/utils/convert_utils.dart';
+import 'package:statiescan/src/widgets/icon_text.dart';
 
 class ReceiptInformationCard extends StatelessWidget {
   final Receipt receipt;
@@ -26,12 +27,18 @@ class ReceiptInformationCard extends StatelessWidget {
             IconText(iconData: Icons.store, text: store.name),
             IconText(
               iconData: Icons.euro,
-              text:
-                  "Het bedrag is €${AmountFormatter.amountToString(receipt.amountInCents)}",
+              text: AppLocalizations.of(context)!.amountDescription(
+                AmountFormatter.amountToString(receipt.amountInCents),
+              ),
             ),
             IconText(
               iconData: Icons.access_time,
-              text: ConvertUtils.getExpiryText(receipt.expiresAt, false),
+              text: ConvertUtils.getLocalizedExpiryText(
+                AppLocalizations.of(context)!,
+                Localizations.localeOf(context),
+                receipt.expiresAt,
+                false,
+              ),
             ),
           ],
         ),

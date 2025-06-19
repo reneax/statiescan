@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/create/enums/expiry_time.dart';
 import 'package:statiescan/src/screens/create/widgets/add_store_dialog.dart';
@@ -169,8 +170,9 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
       final notificationsAllowed =
           await notificationService.isNotificationsAllowed();
 
-      if (notificationsAllowed) {
+      if (notificationsAllowed && mounted) {
         await notificationService.scheduleReceiptExpiryNotification(
+          context,
           insertedReceipt,
           currentStore,
         );
@@ -181,7 +183,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
       SnackbarCreator.show(
         context,
         duration: Duration(seconds: 2),
-        message: "De bon is succesvol opgeslagen.",
+        message: AppLocalizations.of(context)!.saveReceiptSuccess,
         status: SnackbarStatus.success,
       );
 
@@ -218,7 +220,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Bon toevoegen")),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.addReceipt)),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
@@ -249,7 +251,7 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
                 ),
                 FilledButton.icon(
                   icon: const Icon(Icons.save),
-                  label: const Text("Bon opslaan"),
+                  label: Text(AppLocalizations.of(context)!.saveReceipt),
                   onPressed: _saveReceipt,
                 ),
               ],

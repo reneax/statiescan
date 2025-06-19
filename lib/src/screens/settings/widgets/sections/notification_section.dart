@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:statiescan/src/database/app_database.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
-import 'package:statiescan/src/screens/settings/widgets/notification_days_popup.dart';
+import 'package:statiescan/src/screens/settings/widgets/notification_days_dialog.dart';
 import 'package:statiescan/src/screens/settings/widgets/settings_section.dart';
 import 'package:statiescan/src/services/notification_service.dart';
 import 'package:statiescan/src/utils/snackbar_creator.dart';
@@ -31,7 +32,7 @@ class _GeneralSectionState extends State<NotificationSection> {
         SnackbarCreator.show(
           context,
           message:
-              "Kon geen permissie verkrijgen. Geef de app notificatie permissies via instellingen.",
+              AppLocalizations.of(context)!.errorNotificationPermissionDenied,
           status: SnackbarStatus.error,
           duration: Duration(seconds: 5),
         );
@@ -59,7 +60,9 @@ class _GeneralSectionState extends State<NotificationSection> {
     final receipts = await database.select(database.receipts).get();
     final stores = await database.select(database.stores).get();
 
-    await notificationService.scheduleReceipts(receipts, stores);
+    if (mounted) {
+      await notificationService.scheduleReceipts(context, receipts, stores);
+    }
   }
 
   Future<void> _cancelNotifications(
@@ -85,10 +88,14 @@ class _GeneralSectionState extends State<NotificationSection> {
   }
 
   Future<void> _showNotificationDaysPopup() async {
-    final int? selectedDay = await showNotificationDaysPopup(
-      context,
-      AppSettings.notificationDaysBeforeExpiry.get(),
+    final int? selectedDay = await showDialog(
+      context: context,
+      builder:
+          (context) => NotificationDaysDialog(
+            selectedDay: AppSettings.notificationDaysBeforeExpiry.get(),
+          ),
     );
+
     if (selectedDay != null) {
       _updateNotificationDays(selectedDay);
     }
@@ -97,19 +104,19 @@ class _GeneralSectionState extends State<NotificationSection> {
   @override
   Widget build(BuildContext context) {
     return SettingsSection(
-      title: "Meldingen",
+      title: AppLocalizations.of(context)!.notificationSection,
       children: [
         SwitchListTile(
-          title: const Text("Meldingen ontvangen"),
+          title: Text(AppLocalizations.of(context)!.notificationsEnabledOption),
           secondary: const Icon(Icons.notifications_active),
           value: AppSettings.notificationsEnabled.get(),
           onChanged: _toggleNotifications,
         ),
         ListTile(
           leading: const Icon(Icons.calendar_month_outlined),
-          title: Text('Aantal dagen voor bonverval melding'),
+          title: Text(AppLocalizations.of(context)!.daysBeforeExpiryOption),
           subtitle: Text(
-            "Stel in hoeveel dagen van tevoren je een melding wilt over het verlopen van je bon.",
+            AppLocalizations.of(context)!.daysBeforeExpiryDescription,
           ),
           onTap: _showNotificationDaysPopup,
         ),

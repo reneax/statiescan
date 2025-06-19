@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/repositories/settings/app_settings.dart';
 import 'package:statiescan/src/screens/scan/widgets/processing_text_overlay.dart';
 import 'package:statiescan/src/screens/scan/widgets/scan_crosshair/scan_crosshair.dart';
@@ -55,7 +56,9 @@ class _ScanScreenState extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Bon scannen")),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.scanReceiptTitle),
+      ),
       backgroundColor: Colors.black,
       body: Stack(
         children: [

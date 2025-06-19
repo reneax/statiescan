@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 import 'package:statiescan/src/screens/intro/widgets/intro_dot_indicator.dart';
 
 class CarouselFooter extends StatelessWidget {
@@ -32,7 +33,11 @@ class CarouselFooter extends StatelessWidget {
             height: 50.0,
             child: ElevatedButton(
               onPressed: handleNextButton,
-              child: Text(hasNextPage ? "Verder" : "Doorgaan"),
+              child: Text(
+                hasNextPage
+                    ? AppLocalizations.of(context)!.nextButton
+                    : AppLocalizations.of(context)!.continueButton,
+              ),
             ),
           ),
         ],

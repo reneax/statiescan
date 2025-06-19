@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:statiescan/src/l10n/app_localizations.dart';
 
 class NoReceiptsHint extends StatelessWidget {
   const NoReceiptsHint({super.key});
@@ -12,9 +13,12 @@ class NoReceiptsHint extends StatelessWidget {
         spacing: 8,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Geen bonnen gevonden", style: theme.textTheme.titleMedium),
           Text(
-            "Voeg een nieuwe bon toe met het plusicoon onderaan.",
+            AppLocalizations.of(context)!.noReceiptsFound,
+            style: theme.textTheme.titleMedium,
+          ),
+          Text(
+            AppLocalizations.of(context)!.addNewReceiptHint,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: Colors.grey.shade600,
             ),

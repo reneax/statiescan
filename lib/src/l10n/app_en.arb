@@ -1,0 +1,201 @@
+{
+  "addNewStore": "Add new store",
+  "storeName": "Store name",
+  "errorEmptyStore": "Enter a store name",
+  "errorTooLongName": "This name is too long.",
+  "errorStoreExists": "This store already exists.",
+  "cancel": "Cancel",
+  "close": "Close",
+  "save": "Save",
+  "amount": "Amount",
+  "errorAmountInvalid": "Enter a valid amount",
+  "expiryTime": "Expiration time",
+  "errorExpiryTimeEmpty": "Select an expiration time",
+  "createStoreFirst": "Create a store first",
+  "store": "Store",
+  "errorStoreEmpty": "Select a store",
+  "saveReceiptSuccess": "Receipt saved successfully.",
+  "addReceipt": "Add receipt",
+  "noExpiration": "None",
+  "oneWeek": "1 week",
+  "oneMonth": "1 month",
+  "threeMonths": "3 months",
+  "sixMonths": "6 months",
+  "oneYear": "1 year",
+  "saveReceipt": "Save receipt",
+  "share": "Share",
+  "noExpiryDate": "No expiration date",
+  "expiresOnDate": "Expires on {date}",
+  "@expiresOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "expiredOnDate": "Expired on {date}",
+  "@expiredOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteHintSuggestion": "Hold to delete the receipt.",
+  "amountDescription": "The amount is €{amount}",
+  "@amountDescription": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptFileName": "deposit",
+  "shareMessage": "Deposit receipt of €{amount} redeemable at {storeName}. Sent from the Statiescan app.",
+  "@shareMessage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "storeName": {
+        "type": "String"
+      }
+    }
+  },
+  "dontForgetDeleteAfterShare": "Don't forget to delete the receipt after sharing.",
+  "receiptDeleteSuccess": "Receipt deleted successfully.",
+  "receiptDetailsTitle": "View receipt",
+  "nextButton": "Next",
+  "continueButton": "Continue",
+  "slideOneTitle": "Scan with app",
+  "slideOneDescription": "Easily scan deposit receipts with your phone.",
+  "slideTwoTitle": "Find receipts",
+  "slideTwoDescription": "Quickly find your saved receipts.",
+  "slideThreeTitle": "Receipt expiration alert",
+  "slideThreeDescription": "Get notifications before your receipt expires.",
+  "slideFourTitle": "Share with people",
+  "slideFourDescription": "Easily share your receipts with others.",
+  "noReceiptsFound": "No receipts found",
+  "addNewReceiptHint": "Add a new receipt using the plus icon below.",
+  "filterStore": "Filter by store",
+  "allStores": "All stores",
+  "receiptsTitle": "Receipts",
+  "processingReceipt": "Processing...",
+  "scanReceiptTitle": "Scan receipt",
+  "aboutSection": "About",
+  "statisticsOption": "Statistics",
+  "reviewUsOption": "Rate us",
+  "reviewUsDescription": "Give the app a rating",
+  "githubOption": "Github",
+  "githubDescription": "View the app’s source code",
+  "generalSection": "General",
+  "vibrationOption": "Vibrate on actions",
+  "nextAfterDeleteOption": "Next receipt after deletion",
+  "nextAfterDeleteDescription": "Go to the next store receipt after deletion.",
+  "deleteExpiredReceiptsOption": "Delete expired receipts",
+  "deleteExpiredReceiptsDescription": "Automatically delete receipts once they expire.",
+  "errorNotificationPermissionDenied": "Could not get permission. Enable notification permissions in app settings.",
+  "notificationSection": "Notifications",
+  "notificationsEnabledOption": "Receive notifications",
+  "daysBeforeExpiryOption": "Days before receipt expiry notification",
+  "daysBeforeExpiryDescription": "Set how many days in advance you want to be notified about a receipt expiration.",
+  "scannerSection": "Scanner",
+  "automaticAmountDetectionOption": "Auto-fill amount",
+  "automaticAmountDetectionDescription": "Automatically fills the receipt amount when possible. Requires more processing power.",
+  "daysBeforeNotificationTitle": "Days before notification",
+  "notificationDays": "{day, plural, =1{1 day} other{{day} days}}",
+  "@notificationDays": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "statisticsTitle": "Statistics",
+  "loadingStatistics": "Loading data...",
+  "storeCount": "Number of stores: {count}",
+  "@storeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "redeemableReceipts": "Redeemable receipts: {count}",
+  "@redeemableReceipts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "redeemedReceipts": "Redeemed receipts: {count}",
+  "@redeemedReceipts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "availableAmount": "Available amount: €{amount}",
+  "@availableAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "redeemedAmount": "Redeemed amount: €{amount}",
+  "@redeemedAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "averageAmountPerReceipt": "Average per receipt: €{amount}",
+  "@averageAmountPerReceipt": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Settings",
+  "receiptExpiringSoon": "Receipt expiring soon",
+  "receiptExpiringChannel": "Receipt nearly expired",
+  "receiptExpiringChannelDescription": "Notifications for receipts nearing expiration.",
+  "receiptExpiresIn": "A receipt from {storeName} expires in {days, plural, =1{1 day} other{{days} days}}.",
+  "@receiptExpiresIn": {
+    "placeholders": {
+      "storeName": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptExpired": "Receipt expired",
+  "receiptExpiresOn": "A receipt from {storeName} expired today.",
+  "@receiptExpiresOn": {
+    "placeholders": {
+      "storeName": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptExpiredChannel": "Receipt expired",
+  "receiptExpiredChannelDescription": "Notifications for receipts that are about to expire.",
+  "receiptsTab": "Receipts",
+  "settingsTab": "Settings",
+  "preferencesSection": "Preferences",
+  "languageOption": "Change language",
+  "themeOption": "Choose theme",
+  "systemLanguage": "System",
+  "languageTitle": "Language",
+  "themeTitle": "Theme",
+  "systemTheme": "System",
+  "lightTheme": "Light",
+  "darkTheme": "Dark"
+}
