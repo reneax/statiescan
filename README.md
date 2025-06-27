@@ -11,7 +11,7 @@ Dit is een beheer app voor jouw statiegeld bonnen.
 Statiegeld bonnen komen in ons leven vaak voorbij, maar er is één probleem.<br>
 Het statiegeld wordt vrijgegeven door middel van bonnetjes die kwijtraken of gaan vervagen.<br>
 
-De Statiescan app lost deze problemen op door de bonnen te digitaliseren.
+De Statiescan app lost dit probleem op door de bonnen te digitaliseren en hiermee een beter overzicht te geven.
 
 ### Build naar APK
 
