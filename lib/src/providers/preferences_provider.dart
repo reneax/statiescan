@@ -35,7 +35,7 @@ class PreferencesProvider with ChangeNotifier {
   }
 
   void setTheme(String theme) {
-    AppSettings.selectedLanguage.set(theme);
+    AppSettings.selectedTheme.set(theme);
     _theme = theme;
     notifyListeners();
   }
